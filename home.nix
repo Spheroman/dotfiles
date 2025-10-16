@@ -108,6 +108,9 @@
     enable = true;
     userName = "Jack Wen";
     userEmail = "jackwen04@gmail.com";
+    extraConfig = {
+      url."git@github.com:".insteadOf = "https://github.com/";
+    };
   };
 
   # starship - an customizable prompt for any shell
