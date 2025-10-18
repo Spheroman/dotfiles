@@ -98,6 +98,7 @@
     ethtool
     pciutils # lspci
     usbutils # lsusb
+    setserial
 
     jetbrains.pycharm-community-bin
   ];
