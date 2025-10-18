@@ -20,7 +20,7 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
