@@ -104,7 +104,6 @@
   ];
   programs.zen-browser.enable = true;
 
-  services.solaar.enable = true;
 
   # basic configuration of git, please change to your own
   programs.git = {
