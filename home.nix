@@ -99,6 +99,7 @@
     pciutils # lspci
     usbutils # lsusb
 
+    ugs
     jetbrains.pycharm-community-bin
   ];
   programs.zen-browser.enable = true;
