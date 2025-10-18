@@ -98,7 +98,6 @@
     ethtool
     pciutils # lspci
     usbutils # lsusb
-    setserial
 
     jetbrains.pycharm-community-bin
   ];
@@ -158,6 +157,26 @@
     };
   };
 
+
+  # Solaar mouse configuration
+  xdg.configFile."solaar/rules.yaml".source = (pkgs.formats.yaml { }).generate "rules" [
+      {
+        Rule = [
+          { Test = [ "thumb_wheel_up" 20];}
+          {
+            KeyPress= [ ["Control_L" "Tab"] "click" ];
+          }
+        ];
+      }
+      {
+        Rule = [
+          { Test = [ "thumb_wheel_down" 20];}
+          {
+            KeyPress= [ ["Control_L" "Shift_L" "Tab"] "click" ];
+          }
+        ];
+      }
+    ];
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new home Manager release introduces backwards
