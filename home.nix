@@ -101,6 +101,7 @@
 
     ugs
     jetbrains.pycharm-community-bin
+    discord
   ];
   programs.zen-browser.enable = true;
 
