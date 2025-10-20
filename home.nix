@@ -102,6 +102,7 @@
     ugs
     jetbrains.pycharm-community-bin
     discord
+    teams-for-linux
   ];
   programs.zen-browser.enable = true;
 
