@@ -83,7 +83,7 @@
   users.users.jackw = {
     isNormalUser = true;
     description = "Jack Wen";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
