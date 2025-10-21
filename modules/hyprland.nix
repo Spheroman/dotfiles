@@ -5,7 +5,14 @@
   services.xserver.displayManager.sddm.enable = true; # or disable if you prefer greetd
   services.xserver.desktopManager.plasma5.enable = false; # Disable KDE
   services.xserver.desktopManager.plasma6.enable = false;
-  wayland.windowManager.hyprland.enable = true;
+
+  programs.hyprland = {
+    enable = true;
+    # set the flake package
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    # make sure to also set the portal package, so that they are in sync
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+  };
 
   # Optionally use Wayland login manager (like `greetd`)
   # services.greetd = {

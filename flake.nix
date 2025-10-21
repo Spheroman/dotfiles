@@ -18,9 +18,11 @@
       url = "github:Svenum/Solaar-Flake/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, hyprland, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
