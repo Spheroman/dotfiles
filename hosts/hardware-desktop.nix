@@ -1,7 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ../hardware-configuration.nix ];
+  imports = [
+    ../hardware-configuration.nix
+    ../modules/kde.nix
+    #../modules/hyprland.nix
+  ];
 
   # Desktop-specific hardware setup
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -68,9 +72,6 @@
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
