@@ -3,7 +3,6 @@
 {
   services.xserver.enable = true;
   services.xserver.displayManager.sddm.enable = true; # or disable if you prefer greetd
-  services.xserver.desktopManager.plasma5.enable = false; # Disable KDE
   services.xserver.desktopManager.plasma6.enable = false;
 
   programs.hyprland = {
