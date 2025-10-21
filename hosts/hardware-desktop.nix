@@ -19,6 +19,19 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+    # Recommended for NVIDIA + Wayland
+  boot.kernelParams = [
+    "nvidia_drm.modeset=1"
+    "nvidia_drm.fbdev=1"
+  ];
+
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    WLR_EGL_NO_MODIFIERS = "1";
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

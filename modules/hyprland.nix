@@ -18,7 +18,7 @@
     hyprland
     waybar
     rofi-wayland
-    alacritty
+    kitty
     mako
     hyprpaper
   ];
