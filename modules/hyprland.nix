@@ -2,8 +2,8 @@
 
 {
   services.xserver.enable = true;
-  services.xserver.displayManager.sddm.enable = true; # or disable if you prefer greetd
-  services.xserver.desktopManager.plasma6.enable = false;
+  services.displayManager.sddm.enable = true; # or disable if you prefer greetd
+  services.desktopManager.plasma6.enable = false;
 
   programs.hyprland = {
     enable = true;
