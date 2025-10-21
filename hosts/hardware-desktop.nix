@@ -3,8 +3,8 @@
 {
   imports = [
     ../hardware-configuration.nix
-    ../modules/kde.nix
-    #../modules/hyprland.nix
+    #../modules/kde.nix
+    ../modules/hyprland.nix
   ];
 
   # Desktop-specific hardware setup

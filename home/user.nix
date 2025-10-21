@@ -29,7 +29,7 @@
 
   imports = [
     inputs.zen-browser.homeModules.beta
-    #./hyprland.nix
+    ./hyprland.nix
   ];
   home.packages = with pkgs; [
     # here is some command line tools I use frequently
