@@ -28,6 +28,8 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/hardware-desktop.nix
+          #./modules/kde.nix
+          ./modules/hyprland.nix
 
           solaar.nixosModules.default
           home-manager.nixosModules.home-manager
@@ -48,6 +50,7 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/hardware-laptop.nix
+          ./modules/kde.nix
 
           home-manager.nixosModules.home-manager
           {
