@@ -13,7 +13,6 @@
       bind = SUPER, Return, exec, alacritty
       bind = SUPER, Q, killactive,
       bind = SUPER, M, exit,
-      bind = SUPER, E, exec, thunar
       bind = SUPER, SPACE, exec, rofi -show drun
     '';
   };
@@ -27,7 +26,6 @@
 
   home.packages = with pkgs; [
     kitty
-    thunar
     rofi-wayland
   ];
 }
