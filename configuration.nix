@@ -22,7 +22,6 @@
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 
-  {
   networking.wireless.iwd.settings = {
     Network = {
       EnableIPv6 = true;
@@ -31,7 +30,6 @@
       AutoConnect = true;
     };
   };
-}
 
   # Set your time zone.
   time.timeZone = "Asia/Taipei";
