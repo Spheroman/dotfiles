@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ../hardware-configuration.nix ];
 
   # Desktop-specific hardware setup
   services.xserver.videoDrivers = [ "nvidia" ];
