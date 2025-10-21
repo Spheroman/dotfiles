@@ -25,10 +25,7 @@
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [
-          # Import the previous configuration.nix we used,
-          # so the old configuration file still takes effect
-          ./configuration.nix
-          ./hardware-desktop.nix
+          ./hosts/hardware-desktop.nix
 
           solaar.nixosModules.default
           home-manager.nixosModules.home-manager
@@ -39,7 +36,7 @@
           # Pass inputs to all home-manager modules
             home-manager.extraSpecialArgs = { inherit inputs; };
 
-            home-manager.users.jackw = import ./home.nix;
+            home-manager.users.jackw = import ./home/user.nix;
             # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
           }
         ];
@@ -48,10 +45,7 @@
       laptop = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [
-          # Import the previous configuration.nix we used,
-          # so the old configuration file still takes effect
-          ./configuration.nix
-          ./hardware-laptop.nix
+          ./hosts/hardware-laptop.nix
 
           home-manager.nixosModules.home-manager
           {
@@ -61,7 +55,7 @@
           # Pass inputs to all home-manager modules
             home-manager.extraSpecialArgs = { inherit inputs; };
 
-            home-manager.users.jackw = import ./home.nix;
+            home-manager.users.jackw = import ./home/user.nix;
             # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
           }
         ];
