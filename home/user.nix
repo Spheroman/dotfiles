@@ -104,6 +104,7 @@
     jetbrains.pycharm-community-bin
     discord
     teams-for-linux
+    noson
   ];
   programs.zen-browser.enable = true;
 
