@@ -9,6 +9,7 @@
   inputs = {
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -27,11 +28,8 @@
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-<<<<<<< HEAD
-  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, hyprland, ... }: {
-=======
-  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, ... }: {
->>>>>>> 4073f33a7ed0aa3a57e6b21c343934edc54526c2
+
+  outputs = inputs@{ nixpkgs, noxos-hardware, home-manager, zen-browser, solaar, hyprland, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -59,6 +57,7 @@
           ./hosts/hardware-laptop.nix
 
           nixos-hardware.nixosModules.apple-t2
+          solaar.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
