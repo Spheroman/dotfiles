@@ -25,7 +25,7 @@
   '';
 
 
-  virtualization.podman = {
+  virtualisation.podman = {
     enable = true;
     dockercompat = true;
   };
