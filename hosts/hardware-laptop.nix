@@ -1,8 +1,11 @@
 { config, pkgs, ... }:
 
+{
 
-
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ../hardware-configuration.nix
+    ../modules/kde.nix
+  ];
 
 
   boot.loader = {
