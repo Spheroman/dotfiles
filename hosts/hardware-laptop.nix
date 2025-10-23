@@ -18,6 +18,11 @@
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "modesetting" ];
 
+  powerManagement.resumeCommands = ''
+    sudo rmmod apple_bce
+    sudo modprobe apple_bce
+  '';
+
 
   networking.hostName = "nix_laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
