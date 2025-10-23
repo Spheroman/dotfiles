@@ -21,6 +21,7 @@
   powerManagement.resumeCommands = ''
     sudo rmmod apple_bce
     sudo modprobe apple_bce
+    sudo systemctl restart iwd
   '';
 
 
