@@ -1,6 +1,11 @@
 {
   description = "A simple NixOS flake";
 
+  nixConfig = {
+    extra-substituters = ["https://cache.soopy.moe"];
+    extra-trusted-public-keys = ["cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo="];
+  };
+
   inputs = {
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -53,6 +58,7 @@
           ./configuration.nix
           ./hardware-laptop.nix
 
+          nixos-hardware.nixosModules.apple-t2
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
