@@ -1,6 +1,11 @@
 {
   description = "A simple NixOS flake";
 
+  nixConfig = {
+    extra-substituters = ["https://cache.soopy.moe"];
+    extra-trusted-public-keys = ["cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo="];
+  };
+
   inputs = {
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,7 +27,11 @@
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
+<<<<<<< HEAD
   outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, hyprland, ... }: {
+=======
+  outputs = inputs@{ nixpkgs, home-manager, zen-browser, solaar, ... }: {
+>>>>>>> 4073f33a7ed0aa3a57e6b21c343934edc54526c2
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -49,6 +58,7 @@
         modules = [
           ./hosts/hardware-laptop.nix
 
+          nixos-hardware.nixosModules.apple-t2
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
