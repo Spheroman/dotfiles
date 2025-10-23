@@ -29,7 +29,7 @@
   };
 
 
-  outputs = inputs@{ nixpkgs, noxos-hardware, home-manager, zen-browser, solaar, hyprland, ... }: {
+  outputs = inputs@{ nixpkgs, nixos-hardware, home-manager, zen-browser, solaar, hyprland, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
