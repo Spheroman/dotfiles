@@ -11,6 +11,8 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
+    T2FanRD.url = "github:GnomedDev/T2FanRD";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,7 +31,7 @@
   };
 
 
-  outputs = inputs@{ nixpkgs, nixos-hardware, home-manager, zen-browser, solaar, hyprland, ... }: {
+  outputs = inputs@{ nixpkgs, nixos-hardware, T2FanRD, home-manager, zen-browser, solaar, hyprland, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -59,6 +61,8 @@
           nixos-hardware.nixosModules.apple-t2
           solaar.nixosModules.default
           home-manager.nixosModules.home-manager
+          T2FanRD.nixosModules.t2fanrd
+
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
