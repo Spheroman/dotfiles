@@ -18,11 +18,14 @@
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "modesetting" ];
 
-  powerManagement.resumeCommands = ''
-    sudo rmmod apple_bce
-    sudo modprobe apple_bce
-    sudo systemctl restart iwd
-  '';
+  systemd.services.restart_applebce = {
+    description = "Restart apple_bce on resume";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.coreutils}/bin/sh -c '${pkgs.kmod}/bin/modprobe -r apple_bce && ${pkgs.kmod}/bin/modprobe apple_bce'";
+    };
+    wantedBy = [ "suspend.target" "hybrid-sleep.target" ];
+  };
 
 
   virtualisation.podman = {
