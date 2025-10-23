@@ -31,6 +31,12 @@
     inputs.zen-browser.homeModules.beta
     #./hyprland.nix
   ];
+
+  virtualization.podman = {
+    enable = true;
+    dockercompat = true;
+  };
+
   home.packages = with pkgs; [
     # here is some command line tools I use frequently
     # feel free to add your own or remove some of them
@@ -105,6 +111,7 @@
     discord
     teams-for-linux
     noson
+    distrobox
   ];
   programs.zen-browser.enable = true;
 
