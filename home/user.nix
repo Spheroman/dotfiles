@@ -117,7 +117,7 @@
     extensions = with pkgs.vscode-extensions; [
       visualstudioexptteam.vscodeintellicode
       njpwerner.autodocstring
-      KevinRose.vsc-python-indent
+      kevinrose.vsc-python-indent
       ms-toolsai.jupyter
       ms-python.python
       wholroyd.jinja
