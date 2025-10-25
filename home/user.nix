@@ -107,6 +107,7 @@
     teams-for-linux
     noson
     distrobox
+    sqlite3
   ];
   programs.zen-browser.enable = true;
 
@@ -114,8 +115,22 @@
     enable = true;
     package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
-      donjayamanne.python-extension-pack
-      donjayamanne.git-extension-pack
+      VisualStudioExptTeam.vscodeintellicode
+      njpwerner.autodocstring
+      KevinRose.vsc-python-indent
+      ms-toolsai.jupyter
+      ms-python.python
+      wholroyd.jinja
+      batisteo.vscode-django
+      ms-python.pylint
+      ms-python.autopep8
+      donjayamanne.githistory
+      alefragnani.project-manager
+      eamodio.gitlens
+      codezombiech.gitignore
+      ziyasal.vscode-open-in-github
+
+
       alexcvzz.vscode-sqlite
       ms-vscode-remote.vscode-remote-extensionpack
       ms-vscode-remote.remote-ssh-edit
