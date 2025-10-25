@@ -110,6 +110,19 @@
   ];
   programs.zen-browser.enable = true;
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium;
+    extensions = with pkgs.vscode-extensions; [
+      donjayamanne.python-extension-pack
+      donjayamanne.git-extension-pack
+      alexcvzz.vscode-sqlite
+      ms-vscode-remote.vscode-remote-extensionpack
+      ms-vscode-remote.remote-ssh-edit
+      leonardssh.vscord
+    ];
+  };
+
 
   # basic configuration of git, please change to your own
   programs.git = {
