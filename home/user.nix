@@ -108,13 +108,14 @@
     noson
     distrobox
     sqlite3
+    vscode
   ];
   programs.zen-browser.enable = true;
 
   programs.vscode = {
     enable = true;
     extensions = with pkgs.vscode-extensions; [
-      VisualStudioExptTeam.vscodeintellicode
+      visualstudioexptteam.vscodeintellicode
       njpwerner.autodocstring
       KevinRose.vsc-python-indent
       ms-toolsai.jupyter
