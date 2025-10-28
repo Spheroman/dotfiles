@@ -102,37 +102,34 @@
     usbutils # lsusb
 
     ugs
-    jetbrains.pycharm-community-bin
+    jetbrains.pycharm-professional
     discord
     teams-for-linux
     noson
     distrobox
-    sqlite3
     vscode
+    sqlite
   ];
   programs.zen-browser.enable = true;
 
   programs.vscode = {
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
+    profiles.default.extensions = with pkgs.vscode-extensions; [
       visualstudioexptteam.vscodeintellicode
       njpwerner.autodocstring
-      kevinrose.vsc-python-indent
       ms-toolsai.jupyter
       ms-python.python
       wholroyd.jinja
       batisteo.vscode-django
       ms-python.pylint
-      ms-python.autopep8
+      ms-python.debugpy
+      ms-python.black-formatter
+      ms-python.vscode-pylance
       donjayamanne.githistory
       alefragnani.project-manager
       eamodio.gitlens
       codezombiech.gitignore
-      ziyasal.vscode-open-in-github
-
-
-      alexcvzz.vscode-sqlite
-      ms-vscode-remote.vscode-remote-extensionpack
+      yy0931.vscode-sqlite3-editor
       ms-vscode-remote.remote-ssh-edit
       leonardssh.vscord
     ];
