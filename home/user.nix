@@ -111,6 +111,8 @@
     sqlite
     emacsPackages.gnu-elpa-keyring-update
     basedpyright
+    aspell
+    aspellDicts.en
   ];
   programs.zen-browser.enable = true;
 
