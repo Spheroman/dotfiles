@@ -109,6 +109,8 @@
     distrobox
     vscode
     sqlite
+    emacsPackages.gnu-elpa-keyring-update
+    basedpyright
   ];
   programs.zen-browser.enable = true;
 
@@ -133,6 +135,10 @@
       ms-vscode-remote.remote-ssh-edit
       leonardssh.vscord
     ];
+  };
+
+  programs.emacs = {
+    enable = true;
   };
 
 
