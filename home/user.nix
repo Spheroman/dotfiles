@@ -109,7 +109,7 @@
     distrobox
     vscode
     sqlite
-    emacsPackages.gnu-elpa-keyring-update
+    emacs.pkgs.gnu-elpa-keyring-update
     basedpyright
     aspell
     aspellDicts.en
