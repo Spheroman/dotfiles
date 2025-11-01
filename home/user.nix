@@ -29,7 +29,6 @@
 
   imports = [
     inputs.zen-browser.homeModules.beta
-    inputs.solaar.nixosModules.default
     inputs.browseros.packages.${system}.browseros
     #./hyprland.nix
   ];

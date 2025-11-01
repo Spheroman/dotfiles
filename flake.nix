@@ -40,6 +40,7 @@
         modules = [
           ./hosts/hardware-desktop.nix
 
+          solaar.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
