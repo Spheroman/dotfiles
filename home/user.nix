@@ -29,6 +29,8 @@
 
   imports = [
     inputs.zen-browser.homeModules.beta
+    inputs.solaar.nixosModules.default
+    inputs.browseros.packages.${system}.browseros
     #./hyprland.nix
   ];
 
@@ -113,6 +115,10 @@
     basedpyright
     aspell
     aspellDicts.en
+    python313
+    python313Packages.importmagic
+    python313Packages.flake8
+    lmstudio
   ];
   programs.zen-browser.enable = true;
 
@@ -147,9 +153,9 @@
   # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
-    userName = "Jack Wen";
-    userEmail = "jackwen04@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Jack Wen";
+      user.email = "jackwen04@gmail.com";
       url."git@github.com:".insteadOf = "https://github.com/";
     };
   };
