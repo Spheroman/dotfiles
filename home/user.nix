@@ -29,7 +29,6 @@
 
   imports = [
     inputs.zen-browser.homeModules.beta
-    inputs.browseros.packages.x86_64-linux.browseros
     #./hyprland.nix
   ];
 
@@ -118,6 +117,7 @@
     python313Packages.importmagic
     python313Packages.flake8
     lmstudio
+    inputs.browseros.packages.x86_64-linux.browseros
   ];
   programs.zen-browser.enable = true;
 
