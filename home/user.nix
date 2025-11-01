@@ -29,7 +29,7 @@
 
   imports = [
     inputs.zen-browser.homeModules.beta
-    inputs.browseros.packages.${system}.browseros
+    inputs.browseros.packages.x86_64-linux.browseros
     #./hyprland.nix
   ];
 

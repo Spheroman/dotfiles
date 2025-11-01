@@ -5,11 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; };
-  in {
-    packages.${system}.browseros = pkgs.appimageTools.wrapType2 {
+  outputs = { self, nixpkgs }: {
+    packages.x86_64-linux.browseros = let
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
+    in pkgs.appimageTools.wrapType2 {
       name = "browseros";
 
       src = pkgs.fetchurl {
@@ -18,14 +17,13 @@
       };
 
       extraInstallCommands = ''
-        # Create desktop entry
         mkdir -p $out/share/applications
         cat > $out/share/applications/browseros.desktop <<EOF
         [Desktop Entry]
         Name=BrowserOS
-        Exec=browseros --no-default-browser-check --disable-background-networking \
-                       --disable-client-side-phishing-detection \
-                       --disable-component-update --disable-features=BackgroundMode \
+        Exec=browseros --no-default-browser-check --no-first-run --disable-background-networking \
+                       --disable-sync --disable-translate --disable-client-side-phishing-detection \
+                       --disable-component-update --disable-features=TranslateUI,BackgroundMode \
                        --disable-default-apps --disable-domain-reliability \
                        --disable-component-update --noerrdialogs
         Icon=browseros
@@ -35,9 +33,12 @@
       '';
     };
 
-    apps.${system}.default = {
+    apps.x86_64-linux.default = {
       type = "app";
-      program = "${self.packages.${system}.browseros}/bin/browseros";
+      program = "${self.packages.x86_64-linux.browseros}/bin/browseros";
     };
   };
 }
+
+
+
