@@ -28,10 +28,12 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    browseros.url = "path:./modules/browseros";
   };
 
 
-  outputs = inputs@{ nixpkgs, nixos-hardware, T2FanRD, home-manager, zen-browser, solaar, hyprland, ... }: {
+  outputs = inputs@{ nixpkgs, nixos-hardware, T2FanRD, home-manager, zen-browser, solaar, hyprland, browseros, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };

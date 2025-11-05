@@ -134,6 +134,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    source-code-pro
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
@@ -161,6 +162,8 @@
 
   # Enable Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

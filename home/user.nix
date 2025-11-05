@@ -102,21 +102,60 @@
     usbutils # lsusb
 
     ugs
-    jetbrains.pycharm-community-bin
+    jetbrains.pycharm-professional
     discord
     teams-for-linux
     noson
     distrobox
+    vscode
+    sqlite
+    emacs.pkgs.gnu-elpa-keyring-update
+    basedpyright
+    aspell
+    aspellDicts.en
+    python313
+    python313Packages.importmagic
+    python313Packages.flake8
+    lmstudio
+    inputs.browseros.packages.x86_64-linux.browseros
+    rpi-imager
   ];
   programs.zen-browser.enable = true;
+
+  programs.vscode = {
+    enable = true;
+    profiles.default.extensions = with pkgs.vscode-extensions; [
+      visualstudioexptteam.vscodeintellicode
+      njpwerner.autodocstring
+      ms-toolsai.jupyter
+      ms-python.python
+      wholroyd.jinja
+      batisteo.vscode-django
+      ms-python.pylint
+      ms-python.debugpy
+      ms-python.black-formatter
+      ms-python.vscode-pylance
+      donjayamanne.githistory
+      alefragnani.project-manager
+      eamodio.gitlens
+      codezombiech.gitignore
+      yy0931.vscode-sqlite3-editor
+      ms-vscode-remote.remote-ssh-edit
+      leonardssh.vscord
+    ];
+  };
+
+  programs.emacs = {
+    enable = true;
+  };
 
 
   # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
-    userName = "Jack Wen";
-    userEmail = "jackwen04@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Jack Wen";
+      user.email = "jackwen04@gmail.com";
       url."git@github.com:".insteadOf = "https://github.com/";
     };
   };
