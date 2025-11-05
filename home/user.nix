@@ -118,6 +118,7 @@
     python313Packages.flake8
     lmstudio
     inputs.browseros.packages.x86_64-linux.browseros
+    rpi-imager
   ];
   programs.zen-browser.enable = true;
 
