@@ -1,5 +1,5 @@
 # home/hyprland.nix
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   wayland.windowManager.hyprland = {
@@ -7,17 +7,31 @@
     settings = {
       # Monitor configuration
       monitor = [ 
+        ",preferred,auto,1"
         "DP-3, 2560x1440@170, 0x0, 1"
         "HDMI-A-1, 1920x1080@99.61, auto-center-left, 1, transform, 1"
       ];
 
-
-      # Autostart
+      # Startup applications
       exec-once = [
-        "waybar"
+        # Start emacs daemon if not running
+        "emacsclient -c -a 'emacs --daemon' || true"
+        # Start on workspace e with emacs
+        "hyprctl dispatch workspace name:e && emacsclient -c"
         "mako"
         "hyprpaper"
         "wl-paste --watch cliphist store"  # Clipboard history
+      ];
+
+      # Workspace rules - keep emacs in workspace e
+      windowrulev2 = [
+        "workspace name:e,class:^(Emacs)$"
+      ];
+
+      # Workspace event handlers to reopen emacs
+      exec = [
+        # This watches for workspace changes and reopens emacs on workspace e if needed
+        "bash -c 'socat -u UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | while read -r line; do if echo \"$line\" | grep -q \"workspace>>e\"; then if ! hyprctl clients | grep -q \"class: Emacs\"; then emacsclient -c & fi; fi; done'"
       ];
 
       # Input configuration
@@ -30,15 +44,15 @@
         sensitivity = 0;
         accel_profile = "flat";
       };
+
       # General settings
       general = {
-        gaps_in = 10;
+        gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
         "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
         "col.inactive_border" = "rgba(595959aa)";
         layout = "dwindle";
-        resize_on_border = true;
       };
 
       # Decoration
@@ -77,198 +91,222 @@
         ];
       };
 
-      # Dwindle layout (tiling)
       dwindle = {
         pseudotile = true;
         preserve_split = true;
-        force_split = 2;  # Always split to the right/bottom
       };
 
-      # Master layout (alternative)
-      master = {
-        new_status = "master";
-      };
-
-      # Misc settings
-      misc = {
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-        mouse_move_enables_dpms = true;
-        key_press_enables_dpms = true;
-        vrr = 1;
-        animate_manual_resizes = true;
-        animate_mouse_windowdragging = true;
-        enable_swallow = true;
-        swallow_regex = "^(kitty|Alacritty)$";
-      };
-
-      # Window rules
-      windowrulev2 = [
-        # Float specific windows
-        "float,class:^(pavucontrol)$"
-        "float,class:^(nm-connection-editor)$"
-        "float,class:^(blueman-manager)$"
-        "float,title:^(Picture-in-Picture)$"
-
-        # Pin picture-in-picture
-        "pin,title:^(Picture-in-Picture)$"
-
-        # Opacity rules
-        "opacity 0.95 0.85,class:^(kitty)$"
-        "opacity 0.95 0.85,class:^(Alacritty)$"
-
-        # Workspace assignments (examples)
-        "workspace 2,class:^(firefox)$"
-        "workspace 2,class:^(zen-alpha)$"
-        "workspace 3,class:^(Code)$"
-        "workspace 4,class:^(discord)$"
-      ];
-
-      # Keybindings - AeroSpace style with SUPER instead of ALT
+      # Main bindings
       "$mod" = "SUPER";
-
+      
       bind = [
-        # Launch applications
-        "$mod, Return, exec, kitty"
+        # Core bindings
+        "$mod, RETURN, exec, kitty"
         "$mod, SPACE, exec, rofi -show drun"
-
-        # Window management
-        "$mod, Q, killactive"
-        "$mod SHIFT, M, exit"
-        "$mod, V, togglefloating"
-        "$mod, P, pseudo"  # dwindle
-        "$mod, F, fullscreen"
-
-        # Layout switching
-        "$mod, SLASH, togglesplit"  # equivalent to layout toggle
-        "$mod, COMMA, pseudo"  # placeholder for accordion-like behavior
-
-        # Focus movement (VIM-style: H J K L)
-        "$mod, H, movefocus, l"
-        "$mod, J, movefocus, d"
-        "$mod, K, movefocus, u"
-        "$mod, L, movefocus, r"
-
-        # Move windows (VIM-style with SHIFT)
-        "$mod SHIFT, H, movewindow, l"
-        "$mod SHIFT, J, movewindow, d"
-        "$mod SHIFT, K, movewindow, u"
-        "$mod SHIFT, L, movewindow, r"
-
-        # Resize windows
-        "$mod, MINUS, splitratio, -0.1"
-        "$mod, EQUAL, splitratio, +0.1"
-
-        # Workspace switching (1-9 + letters)
-        "$mod, 1, workspace, 1"
-        "$mod, 2, workspace, 2"
-        "$mod, 3, workspace, 3"
-        "$mod, 4, workspace, 4"
-        "$mod, 5, workspace, 5"
-        "$mod, 6, workspace, 6"
-        "$mod, 7, workspace, 7"
-        "$mod, 8, workspace, 8"
-        "$mod, 9, workspace, 9"
-
-        # Letter workspaces (A-Z)
-        "$mod, A, workspace, 10"
-        "$mod, B, workspace, 11"
-        "$mod, C, workspace, 12"
-        "$mod, D, workspace, 13"
-        "$mod, E, workspace, 14"
-        "$mod, G, workspace, 15"
-        "$mod, I, workspace, 16"
-        "$mod, M, workspace, 17"
-        "$mod, N, workspace, 18"
-        "$mod, O, workspace, 19"
-        "$mod, R, workspace, 20"
-        "$mod, S, workspace, 21"
-        "$mod, T, workspace, 22"
-        "$mod, U, workspace, 23"
-        "$mod, W, workspace, 24"
-        "$mod, X, workspace, 25"
-        "$mod, Y, workspace, 26"
-        "$mod, Z, workspace, 27"
-
-        # Move window to workspace (1-9)
-        "$mod SHIFT, 1, movetoworkspace, 1"
-        "$mod SHIFT, 2, movetoworkspace, 2"
-        "$mod SHIFT, 3, movetoworkspace, 3"
-        "$mod SHIFT, 4, movetoworkspace, 4"
-        "$mod SHIFT, 5, movetoworkspace, 5"
-        "$mod SHIFT, 6, movetoworkspace, 6"
-        "$mod SHIFT, 7, movetoworkspace, 7"
-        "$mod SHIFT, 8, movetoworkspace, 8"
-        "$mod SHIFT, 9, movetoworkspace, 9"
-
-        # Move window to letter workspaces
-        "$mod SHIFT, A, movetoworkspace, 10"
-        "$mod SHIFT, B, movetoworkspace, 11"
-        "$mod SHIFT, C, movetoworkspace, 12"
-        "$mod SHIFT, D, movetoworkspace, 13"
-        "$mod SHIFT, E, movetoworkspace, 14"
-        "$mod SHIFT, G, movetoworkspace, 15"
-        "$mod SHIFT, I, movetoworkspace, 16"
-        "$mod SHIFT, N, movetoworkspace, 18"
-        "$mod SHIFT, O, movetoworkspace, 19"
-        "$mod SHIFT, R, movetoworkspace, 20"
-        "$mod SHIFT, S, movetoworkspace, 21"
-        "$mod SHIFT, T, movetoworkspace, 22"
-        "$mod SHIFT, U, movetoworkspace, 23"
-        "$mod SHIFT, W, movetoworkspace, 24"
-        "$mod SHIFT, X, movetoworkspace, 25"
-        "$mod SHIFT, Y, movetoworkspace, 26"
-        "$mod SHIFT, Z, movetoworkspace, 27"
-
-        # Workspace back-and-forth (like alt-tab in AeroSpace)
+        "$mod SHIFT, Q, killactive,"
+        "$mod SHIFT, E, exit,"
         "$mod, TAB, workspace, previous"
-
-        # Move workspace to next monitor
         "$mod SHIFT, TAB, movecurrentworkspacetomonitor, +1"
 
-        # Screenshot utilities
-        ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
-        "SHIFT, Print, exec, grim - | wl-copy"
-        "$mod, Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png"
+        "$mod SHIFT, H, movefocus, l"
+        "$mod SHIFT, J, movefocus, d"
+        "$mod SHIFT, K, movefocus, u"
+        "$mod SHIFT, L, movefocus, r"
 
-        # Service mode (SUPER + SHIFT + SEMICOLON)
-        "$mod SHIFT, SEMICOLON, submap, service"
+        # Enter movement submode
+        "$mod SHIFT, semicolon, submap, movement"
+        "$mod SHIFT, M, submap, movetosingle"
 
-        # Clipboard history
-        "$mod, period, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+        # Workspace switching - letters
+        "$mod, A, workspace, name:a"
+        "$mod, B, workspace, name:b"
+        "$mod, C, workspace, name:c"
+        "$mod, D, workspace, name:d"
+        "$mod, E, workspace, name:e"
+        "$mod, F, workspace, name:f"
+        "$mod, G, workspace, name:g"
+        "$mod, H, workspace, name:h"
+        "$mod, I, workspace, name:i"
+        "$mod, J, workspace, name:j"
+        "$mod, K, workspace, name:k"
+        "$mod, L, workspace, name:l"
+        "$mod, M, workspace, name:m"
+        "$mod, N, workspace, name:n"
+        "$mod, O, workspace, name:o"
+        "$mod, P, workspace, name:p"
+        "$mod, Q, workspace, name:q"
+        "$mod, R, workspace, name:r"
+        "$mod, S, workspace, name:s"
+        "$mod, T, workspace, name:t"
+        "$mod, U, workspace, name:u"
+        "$mod, V, workspace, name:v"
+        "$mod, W, workspace, name:w"
+        "$mod, X, workspace, name:x"
+        "$mod, Y, workspace, name:y"
+        "$mod, Z, workspace, name:z"
+        
+        # Workspace switching - numbers
+        "$mod, 1, workspace, name:1"
+        "$mod, 2, workspace, name:2"
+        "$mod, 3, workspace, name:3"
+        "$mod, 4, workspace, name:4"
+        "$mod, 5, workspace, name:5"
+        "$mod, 6, workspace, name:6"
+        "$mod, 7, workspace, name:7"
+        "$mod, 8, workspace, name:8"
+        "$mod, 9, workspace, name:9"
+        "$mod, 0, workspace, name:0"
       ];
 
-      # Service submap (like AeroSpace's service mode)
+      # Movement submode
       submap = [
-        "service"
+        ''movement
+bind = ,h,movewindow,l
+bind = ,j,movewindow,d
+bind = ,k,movewindow,u
+bind = ,l,movewindow,r
+bind = ,SHIFT h,resizeactive,-50 0
+bind = ,SHIFT j,resizeactive,0 50
+bind = ,SHIFT k,resizeactive,0 -50
+bind = ,SHIFT l,resizeactive,50 0
+bind = ,f,togglefloating,
+bind = ,SHIFT f,fullscreen,0
+bind = ,m,submap,movetomany
+bind = ,q,submap,reset
+bind = ,escape,submap,reset
+bind = ,SUPER,submap,reset
+submap = reset
+''
+''movetosingle
+bind = , a, movetoworkspace, name:a
+bind = , a, submap, reset
+bind = , b, movetoworkspace, name:b
+bind = , b, submap, reset
+bind = , c, movetoworkspace, name:c
+bind = , c, submap, reset
+bind = , d, movetoworkspace, name:d
+bind = , d, submap, reset
+bind = , e, movetoworkspace, name:e
+bind = , e, submap, reset
+bind = , f, movetoworkspace, name:f
+bind = , f, submap, reset
+bind = , g, movetoworkspace, name:g
+bind = , g, submap, reset
+bind = , h, movetoworkspace, name:h
+bind = , h, submap, reset
+bind = , i, movetoworkspace, name:i
+bind = , i, submap, reset
+bind = , j, movetoworkspace, name:j
+bind = , j, submap, reset
+bind = , k, movetoworkspace, name:k
+bind = , k, submap, reset
+bind = , l, movetoworkspace, name:l
+bind = , l, submap, reset
+bind = , m, movetoworkspace, name:m
+bind = , m, submap, reset
+bind = , n, movetoworkspace, name:n
+bind = , n, submap, reset
+bind = , o, movetoworkspace, name:o
+bind = , o, submap, reset
+bind = , p, movetoworkspace, name:p
+bind = , p, submap, reset
+bind = , q, movetoworkspace, name:q
+bind = , q, submap, reset
+bind = , r, movetoworkspace, name:r
+bind = , r, submap, reset
+bind = , s, movetoworkspace, name:s
+bind = , s, submap, reset
+bind = , t, movetoworkspace, name:t
+bind = , t, submap, reset
+bind = , u, movetoworkspace, name:u
+bind = , u, submap, reset
+bind = , v, movetoworkspace, name:v
+bind = , v, submap, reset
+bind = , w, movetoworkspace, name:w
+bind = , w, submap, reset
+bind = , x, movetoworkspace, name:x
+bind = , x, submap, reset
+bind = , y, movetoworkspace, name:y
+bind = , y, submap, reset
+bind = , z, movetoworkspace, name:z
+bind = , z, submap, reset
+bind = , 1, movetoworkspace, name:1
+bind = , 1, submap, reset
+bind = , 2, movetoworkspace, name:2
+bind = , 2, submap, reset
+bind = , 3, movetoworkspace, name:3
+bind = , 3, submap, reset
+bind = , 4, movetoworkspace, name:4
+bind = , 4, submap, reset
+bind = , 5, movetoworkspace, name:5
+bind = , 5, submap, reset
+bind = , 6, movetoworkspace, name:6
+bind = , 6, submap, reset
+bind = , 7, movetoworkspace, name:7
+bind = , 7, submap, reset
+bind = , 8, movetoworkspace, name:8
+bind = , 8, submap, reset
+bind = , 9, movetoworkspace, name:9
+bind = , 9, submap, reset
+bind = , 0, movetoworkspace, name:0
+bind = , 0, submap, reset
+
+# Exit movetoworkspace submode
+bind = , escape, submap, reset
+bind = SUPER, SUPER_L, submap, reset
+
+submap = reset
+''
+''movetomany
+bind = , a, movetoworkspacesilent, name:a
+bind = , b, movetoworkspacesilent, name:b
+bind = , c, movetoworkspacesilent, name:c
+bind = , d, movetoworkspacesilent, name:d
+bind = , e, movetoworkspacesilent, name:e
+bind = , f, movetoworkspacesilent, name:f
+bind = , g, movetoworkspacesilent, name:g
+bind = , h, movetoworkspacesilent, name:h
+bind = , i, movetoworkspacesilent, name:i
+bind = , j, movetoworkspacesilent, name:j
+bind = , k, movetoworkspacesilent, name:k
+bind = , l, movetoworkspacesilent, name:l
+bind = , m, movetoworkspacesilent, name:m
+bind = , n, movetoworkspacesilent, name:n
+bind = , o, movetoworkspacesilent, name:o
+bind = , p, movetoworkspacesilent, name:p
+bind = , q, movetoworkspacesilent, name:q
+bind = , r, movetoworkspacesilent, name:r
+bind = , s, movetoworkspacesilent, name:s
+bind = , t, movetoworkspacesilent, name:t
+bind = , u, movetoworkspacesilent, name:u
+bind = , v, movetoworkspacesilent, name:v
+bind = , w, movetoworkspacesilent, name:w
+bind = , x, movetoworkspacesilent, name:x
+bind = , y, movetoworkspacesilent, name:y
+bind = , z, movetoworkspacesilent, name:z
+bind = , 1, movetoworkspacesilent, name:1
+bind = , 2, movetoworkspacesilent, name:2
+bind = , 3, movetoworkspacesilent, name:3
+bind = , 4, movetoworkspacesilent, name:4
+bind = , 5, movetoworkspacesilent, name:5
+bind = , 6, movetoworkspacesilent, name:6
+bind = , 7, movetoworkspacesilent, name:7
+bind = , 8, movetoworkspacesilent, name:8
+bind = , 9, movetoworkspacesilent, name:9
+bind = , 0, movetoworkspacesilent, name:0
+
+bind = , escape, submap, reset
+bind = SUPER, SUPER_L, submap, reset
+
+submap = reset
+''
       ];
-
+      # Mouse bindings
+      bindm = [
+        "$mod, mouse:272, movewindow"
+        "$mod, mouse:273, resizewindow"
+      ];
     };
-
-    # Extra config for service submap
-    extraConfig = ''
-      # Service mode bindings
-      submap=service
-      bind=,escape,submap,reset
-      bind=,R,exec,hyprctl reload
-      bind=,R,submap,reset
-      bind=,F,togglefloating
-      bind=,F,submap,reset
-      bind=,backspace,exec,hyprctl clients | grep "class:" | awk '{print $2}' | xargs -I{} hyprctl dispatch closewindow address:{}
-      bind=,backspace,submap,reset
-
-      # Join windows (grouping)
-      bind=SHIFT,H,moveintogroup,l
-      bind=SHIFT,H,submap,reset
-      bind=SHIFT,J,moveintogroup,d
-      bind=SHIFT,J,submap,reset
-      bind=SHIFT,K,moveintogroup,u
-      bind=SHIFT,K,submap,reset
-      bind=SHIFT,L,moveintogroup,r
-      bind=SHIFT,L,submap,reset
-
-      submap=reset
-    '';
   };
 
   # Waybar configuration
@@ -471,13 +509,12 @@
       };
 
       cpu = {
-        format = " {usage}%";
-        tooltip = false;
+        format = "{usage}%";
         interval = 2;
       };
 
       memory = {
-        format = " {}%";
+        format = "{}%";
         interval = 2;
       };
 
@@ -587,6 +624,7 @@
     jetbrains-mono  # Font for waybar
     font-awesome  # Icons
     nerd-fonts.jetbrains-mono
+    nemo
   ];
 
   # Hyprlock for screen locking (optional)

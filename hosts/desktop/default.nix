@@ -13,6 +13,9 @@
 
   networking.hostName = "nixos";
 
+  services.logind.powerKey = "suspend";
+
+
   # Desktop-specific packages
   environment.systemPackages = with pkgs; [
     source-code-pro
