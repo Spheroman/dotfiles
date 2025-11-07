@@ -1,5 +1,5 @@
 {
-  description = "A simple NixOS flake";
+  description = "Jack's NixOS Configuration";
 
   nixConfig = {
     extra-substituters = ["https://cache.soopy.moe"];
@@ -7,76 +7,79 @@
   };
 
   inputs = {
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-
-    T2FanRD.url = "github:GnomedDev/T2FanRD";
 
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland.url = "github:hyprwm/Hyprland";
+
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     solaar = {
       url = "github:Svenum/Solaar-Flake/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
+    T2FanRD.url = "github:GnomedDev/T2FanRD";
 
     browseros.url = "path:./modules/browseros";
   };
 
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, ... }@inputs:
+    let
+      system = "x86_64-linux";
 
-  outputs = inputs@{ nixpkgs, nixos-hardware, T2FanRD, home-manager, zen-browser, solaar, hyprland, browseros, ... }: {
-    nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/hardware-desktop.nix
+      # Shared configuration modules
+      commonModules = [
+        # Core system configuration
+        ./modules/core
 
-          solaar.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
+        # Enable flakes globally
+        { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
 
-          # Pass inputs to all home-manager modules
-            home-manager.extraSpecialArgs = { inherit inputs; };
+        # Home manager setup
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = { inherit inputs; };
+            users.jackw = import ./home;
+          };
+        }
 
-            home-manager.users.jackw = import ./home/user.nix;
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
-          }
-        ];
-      };
+        # Solaar for Logitech devices
+        inputs.solaar.nixosModules.default
+      ];
 
-      laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/hardware-laptop.nix
+    in {
+      nixosConfigurations = {
+        # Desktop configuration
+        nixos = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = commonModules ++ [
+            ./hosts/desktop
+          ];
+        };
 
-          nixos-hardware.nixosModules.apple-t2
-          solaar.nixosModules.default
-          home-manager.nixosModules.home-manager
-          T2FanRD.nixosModules.t2fanrd
-
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-          # Pass inputs to all home-manager modules
-            home-manager.extraSpecialArgs = { inherit inputs; };
-
-            home-manager.users.jackw = import ./home/user.nix;
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
-          }
-        ];
+        # Laptop configuration
+        laptop = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = commonModules ++ [
+            ./hosts/laptop
+            nixos-hardware.nixosModules.apple-t2
+            inputs.T2FanRD.nixosModules.t2fanrd
+          ];
+        };
       };
     };
-  };
 }
