@@ -144,7 +144,7 @@
   # Rofi configuration
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi;
   };
 
   # Mako notification daemon
