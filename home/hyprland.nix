@@ -6,7 +6,11 @@
     enable = true;
     settings = {
       # Monitor configuration
-      monitor = ",preferred,auto,1";
+      monitor = [ 
+        "DP-3, 2560x1440@170, 0x0, 1"
+        "HDMI-A-1, 1920x1080@99.61, auto-center-left, 1, transform, 1"
+      ];
+
 
       # Autostart
       exec-once = [
@@ -24,9 +28,8 @@
           natural_scroll = true;  # macOS-style scrolling
         };
         sensitivity = 0;
-        accel_profile = "adaptive";
+        accel_profile = "flat";
       };
-
       # General settings
       general = {
         gaps_in = 10;
@@ -49,10 +52,6 @@
           xray = true;
           ignore_opacity = true;
         };
-        drop_shadow = true;
-        shadow_range = 20;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
         dim_inactive = false;
       };
 
@@ -60,20 +59,21 @@
       animations = {
         enabled = true;
         bezier = [
+          "easeInOutQuint, 0.83, 0, 0.17, 1"
           "wind, 0.05, 0.9, 0.1, 1.05"
           "winIn, 0.1, 1.1, 0.1, 1.1"
           "winOut, 0.3, -0.3, 0, 1"
           "liner, 1, 1, 1, 1"
         ];
         animation = [
-          "windows, 1, 6, wind, slide"
-          "windowsIn, 1, 6, winIn, slide"
-          "windowsOut, 1, 5, winOut, slide"
-          "windowsMove, 1, 5, wind, slide"
+          "windows, 1, 2, easeInOutQuint, slide"
+          "windowsIn, 1, 2, easeInOutQuint, slide"
+          "windowsOut, 1, 2, easeInOutQuint, slide"
+          "windowsMove, 1, 2, easeInOutQuint, slide"
           "border, 1, 1, liner"
           "borderangle, 1, 30, liner, loop"
           "fade, 1, 10, default"
-          "workspaces, 1, 5, wind"
+          "workspaces, 1, 2, easeInOutQuint"
         ];
       };
 
@@ -82,7 +82,6 @@
         pseudotile = true;
         preserve_split = true;
         force_split = 2;  # Always split to the right/bottom
-        no_gaps_when_only = false;
       };
 
       # Master layout (alternative)
