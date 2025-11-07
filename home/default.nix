@@ -82,7 +82,6 @@
       teams-for-linux
       noson
       distrobox
-      rpi-imager
       inputs.browseros.packages.x86_64-linux.browseros
     ];
   };
