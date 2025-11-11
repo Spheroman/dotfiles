@@ -51,20 +51,6 @@
         "type": "github"
       }
     },
-    "browseros": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "path": "./modules/browseros",
-        "type": "path"
-      },
-      "original": {
-        "path": "./modules/browseros",
-        "type": "path"
-      },
-      "parent": []
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -281,7 +267,7 @@
         "hyprlang": "hyprlang",
         "hyprutils": "hyprutils",
         "hyprwayland-scanner": "hyprwayland-scanner_2",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_2",
         "pre-commit-hooks": "pre-commit-hooks",
         "systems": "systems",
         "xdph": "xdph"
@@ -574,22 +560,6 @@
       "locked": {
         "lastModified": 1762363567,
         "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1762363567,
-        "narHash": "sha256-YRqMDEtSMbitIMj+JLpheSz0pwEr0Rmy5mC7myl17xs=",
         "owner": "nixos",
         "repo": "nixpkgs",
         "rev": "ae814fd3904b621d8ab97418f1d0f2eb0d3716f4",
@@ -628,11 +598,10 @@
     "root": {
       "inputs": {
         "T2FanRD": "T2FanRD",
-        "browseros": "browseros",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs_3",
         "solaar": "solaar",
         "zen-browser": "zen-browser"
       }

@@ -17,7 +17,7 @@
         # Start emacs daemon if not running
         "emacsclient -c -a 'emacs --daemon' || true"
         # Start on workspace e with emacs
-        "hyprctl dispatch workspace name:e && emacsclient -c"
+        "[workspace 1 silent] emacsclient -c"
         "mako"
         "hyprpaper"
         "wl-paste --watch cliphist store"  # Clipboard history
@@ -175,6 +175,7 @@ bind = ,m,submap,movetomany
 bind = ,q,submap,reset
 bind = ,escape,submap,reset
 bind = ,SUPER,submap,reset
+bind = , catchall, submap, movement
 submap = reset
 ''
 ''movetosingle
@@ -255,6 +256,8 @@ bind = , 0, submap, reset
 bind = , escape, submap, reset
 bind = SUPER, SUPER_L, submap, reset
 
+bind = , catchall, submap, movetosingle
+
 submap = reset
 ''
 ''movetomany
@@ -297,6 +300,8 @@ bind = , 0, movetoworkspacesilent, name:0
 
 bind = , escape, submap, reset
 bind = SUPER, SUPER_L, submap, reset
+
+bind = , catchall, submap, movetomany
 
 submap = reset
 ''
@@ -475,7 +480,7 @@ submap = reset
       height = 35;
       spacing = 4;
 
-      modules-left = [ "hyprland/workspaces" "hyprland/window" ];
+      modules-left = [ "hyprland/workspaces" "hyprland/submap" "hyprland/window" ];
       modules-center = [ "clock" ];
       modules-right = [
         "pulseaudio"
@@ -497,6 +502,12 @@ submap = reset
         format = "{}";
         max-length = 50;
         separate-outputs = true;
+      };
+
+      "hyprland/submap" = {
+        format = "{}";
+        max-length = 30;
+        tooltip = false;
       };
 
       tray = {

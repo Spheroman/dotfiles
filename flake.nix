@@ -29,7 +29,6 @@
 
     T2FanRD.url = "github:GnomedDev/T2FanRD";
 
-    browseros.url = "path:./modules/browseros";
   };
 
   outputs = { self, nixpkgs, nixos-hardware, home-manager, ... }@inputs:

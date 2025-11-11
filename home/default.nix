@@ -82,7 +82,20 @@
       teams-for-linux
       noson
       distrobox
-      inputs.browseros.packages.x86_64-linux.browseros
+      steam
+      libreoffice-fresh
+      hunspell
+      hunspellDicts.en-us
+      nwg-look
+      
+      (appimageTools.wrapType2 {
+        pname = "browseros";
+        version = "0.28.1";
+        src = fetchurl {
+          url = "https://github.com/browseros-ai/BrowserOS/releases/download/v0.28.1/BrowserOS_v0.28.1_x64.AppImage";
+          sha256 = "sha256-YY3g0xNr/Jm4Q1PJSg27vO+M5jur/lM2a6iTN03BbCA=";
+        };
+      })
     ];
   };
 
