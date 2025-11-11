@@ -19,7 +19,7 @@
 
   # Essential Wayland/Hyprland packages
   environment.systemPackages = with pkgs; [
-    waybar
+    ashell
     rofi
     kitty
     mako
