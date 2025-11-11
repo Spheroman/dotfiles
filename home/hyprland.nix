@@ -14,6 +14,7 @@
 
       # Startup applications
       exec-once = [
+        "ashell &"
         # Start emacs daemon if not running
         "emacsclient -c -a 'emacs --daemon' || true"
         # Start on workspace e with emacs
@@ -166,12 +167,12 @@ bind = ,h,movewindow,l
 bind = ,j,movewindow,d
 bind = ,k,movewindow,u
 bind = ,l,movewindow,r
-bind = ,SHIFT h,resizeactive,-50 0
-bind = ,SHIFT j,resizeactive,0 50
-bind = ,SHIFT k,resizeactive,0 -50
-bind = ,SHIFT l,resizeactive,50 0
+bind = SHIFT, h,resizeactive,-50 0
+bind = SHIFT, j,resizeactive,0 50
+bind = SHIFT, k,resizeactive,0 -50
+bind = SHIFT, l,resizeactive,50 0
 bind = ,f,togglefloating,
-bind = ,SHIFT f,fullscreen,0
+bind = SHIFT, f,fullscreen,0
 bind = ,m,submap,movetomany
 bind = ,q,submap,reset
 bind = ,escape,submap,reset

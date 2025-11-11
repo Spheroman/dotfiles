@@ -87,7 +87,8 @@
       hunspell
       hunspellDicts.en-us
       nwg-look
-      
+      obsidian
+
       (appimageTools.wrapType2 {
         pname = "browseros";
         version = "0.28.1";
@@ -97,6 +98,13 @@
         };
       })
     ];
+  };
+
+
+
+  programs.obs-studio = {
+    enable = true;
+    package = pkgs.obs-studio.override {cudaSupport = true;};
   };
 
   programs.home-manager.enable = true;
