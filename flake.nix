@@ -51,7 +51,7 @@
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs; };
             users.jackw = import ./users/jackw;
-            users.testuser = import ./users/testuser;
+            users.wenyu = import ./users/wenyu;
           };
         }
 
