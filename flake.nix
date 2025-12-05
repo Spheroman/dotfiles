@@ -50,7 +50,8 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs; };
-            users.jackw = import ./home;
+            users.jackw = import ./users/jackw;
+            users.testuser = import ./users/testuser;
           };
         }
 

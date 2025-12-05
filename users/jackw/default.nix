@@ -12,7 +12,7 @@
   home = {
     username = "jackw";
     homeDirectory = "/home/jackw";
-    stateVersion = "25.05";
+    stateVersion = "25.11";
 
     packages = with pkgs; [
       # CLI tools
@@ -88,6 +88,7 @@
       hunspellDicts.en-us
       nwg-look
       obsidian
+      antigravity
 
       (appimageTools.wrapType2 {
         pname = "browseros";

@@ -58,6 +58,14 @@
     isNormalUser = true;
     description = "Jack Wen";
     extraGroups = [ "networkmanager" "wheel" "tty" "dialout" ];
+    initialPassword = "jackw";  # Only sets password on first user creation
+  };
+
+  users.users.wenyu = {
+    isNormalUser = true;
+    description = "Wang Wenyu";
+    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" ];
+    initialPassword = "wenyu";  # Only sets password on first user creation
   };
 
   # System packages
