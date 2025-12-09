@@ -8,9 +8,9 @@
   # Git
   programs.git = {
     enable = true;
-    userName = "Jack Wen";
-    userEmail = "jackwen04@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Jack Wen";
+      user.email = "jackwen04@gmail.com";
       url."git@github.com:".insteadOf = "https://github.com/";
     };
   };
@@ -40,18 +40,10 @@
     };
   };
 
-  # Emacs
-  programs.emacs = {
-    enable = true;
-    extraPackages = epkgs: with epkgs; [
-      gnu-elpa-keyring-update
-    ];
-  };
-
   # VSCode
   programs.vscode = {
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
+    profiles.default.extensions = with pkgs.vscode-extensions; [
       visualstudioexptteam.vscodeintellicode
       njpwerner.autodocstring
       ms-toolsai.jupyter

@@ -11,7 +11,7 @@
   home.username = "wenyu";
   home.homeDirectory = "/home/wenyu";
 
-  home.stateVersion = "24.11";
+  home.stateVersion = "25.11";
 
   # Default packages similar to Ubuntu installation
   home.packages = with pkgs; [
@@ -24,8 +24,7 @@
     gnused
     gnutar
     gzip
-    bzip2
-    xz
+    bzip2    xz
     
     # File management
     file
@@ -51,7 +50,21 @@
     
     # Development basics
     git
+    antigravity
+    jetbrains.webstorm
+    android-studio
+    gh
     
+    # Misc
+    noson
+    cowsay
+    sl
+    fastfetch
+    steam
+    discord
+    whatsapp-electron
+    suwayomi-server
+
     # Browser
     # Using zen-browser (configured via programs.zen-browser)
   ];

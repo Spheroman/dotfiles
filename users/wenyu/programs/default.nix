@@ -8,10 +8,13 @@
   # Git
   programs.git = {
     enable = true;
-    userName = "Wang Wenyu";
-    userEmail = "wen.wang2001@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Test User";
+      user.email = "test@example.com";
       init.defaultBranch = "main";
+      safe = {
+        directory = ["/etc/nixos"];
+      };
     };
   };
 
@@ -45,7 +48,7 @@
   # VSCode
   programs.vscode = {
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
+    profiles.default.extensions = with pkgs.vscode-extensions; [
       visualstudioexptteam.vscodeintellicode
       njpwerner.autodocstring
       ms-toolsai.jupyter

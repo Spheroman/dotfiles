@@ -7,6 +7,7 @@
     ./programs
     ./shell.nix
     ./hyprland.nix
+    ./spacemacs.nix
   ];
 
   home = {
@@ -53,6 +54,7 @@
       usbutils
 
       # Development
+      neovim
       jetbrains.pycharm-professional
       vscode
       sqlite

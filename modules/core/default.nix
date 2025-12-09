@@ -38,6 +38,14 @@
     efi.canTouchEfiVariables = true;
   };
 
+  # Maintenance
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+  nix.settings.auto-optimise-store = true;
+
   # Sound
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -53,20 +61,25 @@
   services.openssh.enable = true;
   services.solaar.enable = true;
 
+  users.groups.admin = {};
   # User configuration
   users.users.jackw = {
     isNormalUser = true;
     description = "Jack Wen";
-    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" ];
+    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "admin"];
     initialPassword = "jackw";  # Only sets password on first user creation
   };
 
   users.users.wenyu = {
     isNormalUser = true;
     description = "Wang Wenyu";
-    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" ];
+    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "admin"];
     initialPassword = "wenyu";  # Only sets password on first user creation
   };
+
+  systemd.tmpfiles.rules = [
+    "d /home/jackw/nixos-config o775 jackw admin - -"
+  ];
 
   # System packages
   environment.systemPackages = with pkgs; [
@@ -75,6 +88,18 @@
     git
     htop
   ];
+
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+  ];
+
+  # Shell Aliases
+  environment.shellAliases = {
+    ll = "ls -l";
+    gc = "nix-collect-garbage -d";
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -88,5 +113,5 @@
   # Wayland environment variables
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }

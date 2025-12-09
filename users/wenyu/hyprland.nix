@@ -324,17 +324,19 @@ submap = reset
   # Mako notification daemon
   services.mako = {
     enable = true;
-    backgroundColor = "#1a1b26";
-    borderColor = "#33ccff";
-    borderRadius = 10;
-    borderSize = 2;
-    textColor = "#ffffff";
-    width = 400;
-    height = 150;
-    margin = "20";
-    padding = "15";
-    defaultTimeout = 5000;
-    font = "JetBrainsMono Nerd Font 11";
+    settings = {
+      background-color = "#1a1b26";
+      border-color = "#33ccff";
+      border-radius = 10;
+      border-size = 2;
+      text-color = "#ffffff";
+      width = 400;
+      height = 150;
+      margin = "20";
+      padding = "15";
+      default-timeout = 5000;
+      font = "JetBrainsMono Nerd Font 11";
+    };
     extraConfig = ''
       [urgency=high]
       border-color=#f7768e
@@ -346,8 +348,8 @@ submap = reset
   services.hyprpaper = {
     enable = true;
     settings = {
-      preload = [ "~/Pictures/wallpaper.jpg" ];
-      wallpaper = [ ",~/Pictures/wallpaper.jpg" ];
+      preload = [ "~/Pictures/wallpaper.png" ];
+      wallpaper = [ ",~/Pictures/wallpaper.png" ];
       splash = false;
     };
   };

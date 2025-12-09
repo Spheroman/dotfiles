@@ -13,7 +13,7 @@
 
   networking.hostName = "nixos";
 
-  services.logind.powerKey = "suspend";
+  services.logind.settings.Login.HandlePowerKey = "suspend";
 
 
   # Desktop-specific packages

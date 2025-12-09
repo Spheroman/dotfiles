@@ -17,10 +17,10 @@
       rossetup = "source /opt/ros/jazzy/setup.bash";
 
       # Nix helpers
-      rebuild-desktop = "sudo nixos-rebuild switch --flake ~/nixos-config#nixos";
-      rebuild-laptop = "sudo nixos-rebuild switch --flake ~/nixos-config#laptop";
-      rebuild-test = "sudo nixos-rebuild test --flake ~/nixos-config";
-      update-flake = "nix flake update ~/nixos-config";
+      rebuild-desktop = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+      rebuild-laptop = "sudo nixos-rebuild switch --flake /etc/nixos#laptop";
+      rebuild-test = "sudo nixos-rebuild test --flake /etc/nixos";
+      update-flake = "nix flake update /etc/nixos";
     };
   };
 }
