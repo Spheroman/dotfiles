@@ -5,6 +5,7 @@
     inputs.zen-browser.homeModules.beta
     ./programs
     ./shell.nix
+    ./foot.nix
     ./hyprland.nix
   ];
 
@@ -25,6 +26,7 @@
     gnutar
     gzip
     bzip2    xz
+    fzf
     
     # File management
     file
@@ -52,6 +54,7 @@
     git
     antigravity
     jetbrains.webstorm
+    jetbrains.pycharm-professional
     android-studio
     gh
     
@@ -60,7 +63,6 @@
     cowsay
     sl
     fastfetch
-    steam
     discord
     whatsapp-electron
     suwayomi-server

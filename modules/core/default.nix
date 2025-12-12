@@ -24,6 +24,11 @@
     wifi.backend = "iwd";
   };
 
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
+
   networking.wireless.iwd = {
     enable = true;
     settings = {
@@ -38,13 +43,32 @@
     efi.canTouchEfiVariables = true;
   };
 
+  # Clean /tmp on boot
+  boot.tmp.cleanOnBoot = true;
+
+  # Enable direnv system-wide
+  programs.direnv.enable = true;
+
   # Maintenance
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
-  nix.settings.auto-optimise-store = true;
+  nix.settings = {
+    auto-optimise-store = true;
+    trusted-users = [ "root" "@wheel" ];
+    substituters = [
+      "https://cache.nixos.org"
+      "https://cache.soopy.moe"
+      "https://cosmic.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo="
+      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjXG1hB8uQlD4Jm159stq68OOp71s="
+    ];
+  };
 
   # Sound
   services.pulseaudio.enable = false;
@@ -66,6 +90,7 @@
   users.users.jackw = {
     isNormalUser = true;
     description = "Jack Wen";
+    shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "admin"];
     initialPassword = "jackw";  # Only sets password on first user creation
   };
@@ -73,6 +98,7 @@
   users.users.wenyu = {
     isNormalUser = true;
     description = "Wang Wenyu";
+    shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "admin"];
     initialPassword = "wenyu";  # Only sets password on first user creation
   };
@@ -89,10 +115,14 @@
     htop
   ];
 
+  # Enable zsh system-wide
+  programs.zsh.enable = true;
+
   # Fonts
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
+    miracode
   ];
 
   # Shell Aliases
@@ -114,4 +144,6 @@
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   system.stateVersion = "25.11";
+
+  programs.steam.enable = true;
 }

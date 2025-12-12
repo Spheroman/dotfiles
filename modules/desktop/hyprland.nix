@@ -15,18 +15,20 @@
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
       pkgs.xdg-desktop-portal-gtk
     ];
+    config.common.default = "*";  # Use first available portal
   };
 
   # Essential Wayland/Hyprland packages
   environment.systemPackages = with pkgs; [
     ashell
     rofi
-    kitty
+    foot
     mako
     hyprpaper
     wl-clipboard
     grim
     slurp
+    grimblast  # Screenshot utility
     swaylock
     swayidle
   ];

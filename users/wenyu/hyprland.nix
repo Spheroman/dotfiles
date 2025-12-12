@@ -14,6 +14,7 @@
 
       # Startup applications
       exec-once = [
+        "foot --server &"  # Start foot daemon
         "ashell &"
 
         "[workspace z silent] zen"
@@ -89,7 +90,7 @@
       
       bind = [
         # Core bindings
-        "$mod, RETURN, exec, kitty"
+        "$mod, RETURN, exec, footclient"
         "$mod, SPACE, exec, rofi -show drun"
         "$mod SHIFT, Q, killactive,"
         "$mod SHIFT, E, exit,"
@@ -308,7 +309,7 @@ submap = reset
     enable = true;
     package = pkgs.rofi;
     theme = "Arc-Dark";
-    terminal = "${pkgs.kitty}/bin/kitty";
+    terminal = "${pkgs.foot}/bin/footclient";
     extraConfig = {
       modi = "drun,run,window";
       show-icons = true;
@@ -365,6 +366,7 @@ submap = reset
     font-awesome  # Icons
     nerd-fonts.jetbrains-mono
     nemo
+    foot  # Terminal emulator
   ];
 
   # Hyprlock for screen locking (optional)

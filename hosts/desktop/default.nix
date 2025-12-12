@@ -7,6 +7,7 @@
     ../../modules/hardware/nvidia.nix
     ../../modules/desktop/hyprland.nix
     ../../modules/desktop/greetd.nix
+    ../../modules/desktop/cosmic.nix
     # Alternative: use KDE instead
     # ../../modules/desktop/kde.nix
   ];

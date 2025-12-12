@@ -44,6 +44,9 @@
   # Intel GPU
   services.xserver.videoDrivers = [ "modesetting" ];
 
+  # Power profile management
+  services.power-profiles-daemon.enable = true;
+
   # Podman for containers
   virtualisation.podman = {
     enable = true;

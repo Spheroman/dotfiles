@@ -2,8 +2,12 @@
   description = "Jack's NixOS Configuration";
 
   nixConfig = {
-    extra-substituters = ["https://cache.soopy.moe"];
-    extra-trusted-public-keys = ["cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo="];
+    extra-substituters = [
+      "https://cache.soopy.moe"
+    ];
+    extra-trusted-public-keys = [
+      "cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo="
+    ];
   };
 
   inputs = {
@@ -29,6 +33,11 @@
 
     T2FanRD.url = "github:GnomedDev/T2FanRD";
 
+    # Secrets management
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, nixos-hardware, home-manager, ... }@inputs:
@@ -78,6 +87,17 @@
             ./hosts/laptop
             nixos-hardware.nixosModules.apple-t2
             inputs.T2FanRD.nixosModules.t2fanrd
+          ];
+        };
+
+        # Minimal fallback configuration (TTY only)
+        nixos-minimal = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/minimal
+            # Minimal config doesn't use home-manager or graphical environment
+            { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
           ];
         };
       };

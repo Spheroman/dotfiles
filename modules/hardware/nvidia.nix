@@ -13,6 +13,9 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  # Enable 32-bit graphics for Steam/Wine compatibility
+  hardware.graphics.enable32Bit = true;
+
   # Kernel parameters for NVIDIA + Wayland
   boot.kernelParams = [
     "nvidia_drm.modeset=1"
@@ -25,5 +28,7 @@
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS = "1";
+    # CUDA support for OBS and other apps
+    CUDA_PATH = "${pkgs.cudatoolkit}";
   };
 }

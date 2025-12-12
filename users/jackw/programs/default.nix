@@ -2,6 +2,11 @@
 { config, pkgs, ... }:
 
 {
+
+  imports = [
+    ./foot.nix
+  ];
+
   # Zen Browser
   programs.zen-browser.enable = true;
 
@@ -25,6 +30,25 @@
       line_break.disabled = true;
     };
   };
+
+  # Direnv for per-project environments
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableZshIntegration = true;
+  };
+
+  # Fzf for fuzzy finding
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    defaultOptions = [
+      "--height 40%"
+      "--layout=reverse"
+      "--border"
+    ];
+  };
+
 
   # Alacritty terminal
   programs.alacritty = {

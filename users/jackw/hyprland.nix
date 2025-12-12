@@ -1,6 +1,27 @@
 # home/hyprland.nix
 { config, pkgs, lib, ... }:
 
+let
+  # Generate workspace bindings for letters a-z and numbers 0-9
+  letters = lib.strings.stringToCharacters "abcdefghijklmnopqrstuvwxyz";
+  numbers = lib.strings.stringToCharacters "0123456789";
+  
+  # Switch to workspace bindings
+  workspaceBinds = 
+    (map (ws: "$mod, ${lib.strings.toUpper ws}, workspace, name:${ws}") letters) ++
+    (map (n: "$mod, ${n}, workspace, name:${n}") numbers);
+  
+  # Generate movetoworkspace submodes content
+  moveToSingleBinds = lib.concatStringsSep "\n" (
+    (map (ws: "bind = , ${ws}, movetoworkspace, name:${ws}\nbind = , ${ws}, submap, reset") letters) ++
+    (map (n: "bind = , ${n}, movetoworkspace, name:${n}\nbind = , ${n}, submap, reset") numbers)
+  );
+  
+  moveToManyBinds = lib.concatStringsSep "\n" (
+    (map (ws: "bind = , ${ws}, movetoworkspacesilent, name:${ws}") letters) ++
+    (map (n: "bind = , ${n}, movetoworkspacesilent, name:${n}") numbers)
+  );
+in
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -14,7 +35,8 @@
 
       # Startup applications
       exec-once = [
-        "ashell &"
+        "foot --server &"  # Start foot daemon for fast terminal spawning
+        "waybar &"
         # Start emacs daemon if not running
         "emacsclient -c -a 'emacs --daemon' || true"
         # Start on workspace e with emacs
@@ -28,6 +50,9 @@
       # Workspace rules - keep emacs in workspace e
       windowrulev2 = [
         "workspace name:e,class:^(Emacs)$"
+        # Idle inhibitors - prevent screen lock during fullscreen/video
+        "idleinhibit fullscreen, class:.*"
+        "idleinhibit focus, class:^(mpv|vlc|firefox|zen)$"
       ];
 
       # Workspace event handlers to reopen emacs
@@ -52,12 +77,18 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
+        "col.active_border" = "rgba(e0e0e0ff)";
+        "col.inactive_border" = "rgba(e0e0e0aa)";
         layout = "dwindle";
       };
 
-      # Decoration
+      env = [
+        "HYPRCURSOR_THEME,Bibata-Modern-Classic"
+        "HYPRCURSOR_SIZE,24"
+        "XCURSOR_THEME,Bibata-Modern-Classic"
+        "XCURSOR_SIZE,24"
+      ];
+
       decoration = {
         rounding = 10;
         blur = {
@@ -103,12 +134,15 @@
       
       bind = [
         # Core bindings
-        "$mod, RETURN, exec, kitty"
+        "$mod, RETURN, exec, footclient"
         "$mod, SPACE, exec, rofi -show drun"
         "$mod SHIFT, Q, killactive,"
         "$mod SHIFT, E, exit,"
         "$mod, TAB, workspace, previous"
         "$mod SHIFT, TAB, movecurrentworkspacetomonitor, +1"
+
+        # Screenshot with grimblast
+        "$mod SHIFT, S, exec, grimblast copy area"
 
         "$mod SHIFT, H, movefocus, l"
         "$mod SHIFT, J, movefocus, d"
@@ -118,47 +152,7 @@
         # Enter movement submode
         "$mod SHIFT, semicolon, submap, movement"
         "$mod SHIFT, M, submap, movetosingle"
-
-        # Workspace switching - letters
-        "$mod, A, workspace, name:a"
-        "$mod, B, workspace, name:b"
-        "$mod, C, workspace, name:c"
-        "$mod, D, workspace, name:d"
-        "$mod, E, workspace, name:e"
-        "$mod, F, workspace, name:f"
-        "$mod, G, workspace, name:g"
-        "$mod, H, workspace, name:h"
-        "$mod, I, workspace, name:i"
-        "$mod, J, workspace, name:j"
-        "$mod, K, workspace, name:k"
-        "$mod, L, workspace, name:l"
-        "$mod, M, workspace, name:m"
-        "$mod, N, workspace, name:n"
-        "$mod, O, workspace, name:o"
-        "$mod, P, workspace, name:p"
-        "$mod, Q, workspace, name:q"
-        "$mod, R, workspace, name:r"
-        "$mod, S, workspace, name:s"
-        "$mod, T, workspace, name:t"
-        "$mod, U, workspace, name:u"
-        "$mod, V, workspace, name:v"
-        "$mod, W, workspace, name:w"
-        "$mod, X, workspace, name:x"
-        "$mod, Y, workspace, name:y"
-        "$mod, Z, workspace, name:z"
-        
-        # Workspace switching - numbers
-        "$mod, 1, workspace, name:1"
-        "$mod, 2, workspace, name:2"
-        "$mod, 3, workspace, name:3"
-        "$mod, 4, workspace, name:4"
-        "$mod, 5, workspace, name:5"
-        "$mod, 6, workspace, name:6"
-        "$mod, 7, workspace, name:7"
-        "$mod, 8, workspace, name:8"
-        "$mod, 9, workspace, name:9"
-        "$mod, 0, workspace, name:0"
-      ];
+      ] ++ workspaceBinds;
 
       # Movement submode
       submap = [
@@ -180,79 +174,8 @@ bind = ,SUPER,submap,reset
 bind = , catchall, submap, movement
 submap = reset
 ''
-''movetosingle
-bind = , a, movetoworkspace, name:a
-bind = , a, submap, reset
-bind = , b, movetoworkspace, name:b
-bind = , b, submap, reset
-bind = , c, movetoworkspace, name:c
-bind = , c, submap, reset
-bind = , d, movetoworkspace, name:d
-bind = , d, submap, reset
-bind = , e, movetoworkspace, name:e
-bind = , e, submap, reset
-bind = , f, movetoworkspace, name:f
-bind = , f, submap, reset
-bind = , g, movetoworkspace, name:g
-bind = , g, submap, reset
-bind = , h, movetoworkspace, name:h
-bind = , h, submap, reset
-bind = , i, movetoworkspace, name:i
-bind = , i, submap, reset
-bind = , j, movetoworkspace, name:j
-bind = , j, submap, reset
-bind = , k, movetoworkspace, name:k
-bind = , k, submap, reset
-bind = , l, movetoworkspace, name:l
-bind = , l, submap, reset
-bind = , m, movetoworkspace, name:m
-bind = , m, submap, reset
-bind = , n, movetoworkspace, name:n
-bind = , n, submap, reset
-bind = , o, movetoworkspace, name:o
-bind = , o, submap, reset
-bind = , p, movetoworkspace, name:p
-bind = , p, submap, reset
-bind = , q, movetoworkspace, name:q
-bind = , q, submap, reset
-bind = , r, movetoworkspace, name:r
-bind = , r, submap, reset
-bind = , s, movetoworkspace, name:s
-bind = , s, submap, reset
-bind = , t, movetoworkspace, name:t
-bind = , t, submap, reset
-bind = , u, movetoworkspace, name:u
-bind = , u, submap, reset
-bind = , v, movetoworkspace, name:v
-bind = , v, submap, reset
-bind = , w, movetoworkspace, name:w
-bind = , w, submap, reset
-bind = , x, movetoworkspace, name:x
-bind = , x, submap, reset
-bind = , y, movetoworkspace, name:y
-bind = , y, submap, reset
-bind = , z, movetoworkspace, name:z
-bind = , z, submap, reset
-bind = , 1, movetoworkspace, name:1
-bind = , 1, submap, reset
-bind = , 2, movetoworkspace, name:2
-bind = , 2, submap, reset
-bind = , 3, movetoworkspace, name:3
-bind = , 3, submap, reset
-bind = , 4, movetoworkspace, name:4
-bind = , 4, submap, reset
-bind = , 5, movetoworkspace, name:5
-bind = , 5, submap, reset
-bind = , 6, movetoworkspace, name:6
-bind = , 6, submap, reset
-bind = , 7, movetoworkspace, name:7
-bind = , 7, submap, reset
-bind = , 8, movetoworkspace, name:8
-bind = , 8, submap, reset
-bind = , 9, movetoworkspace, name:9
-bind = , 9, submap, reset
-bind = , 0, movetoworkspace, name:0
-bind = , 0, submap, reset
+        ''movetosingle
+${moveToSingleBinds}
 
 # Exit movetoworkspace submode
 bind = , escape, submap, reset
@@ -262,43 +185,8 @@ bind = , catchall, submap, movetosingle
 
 submap = reset
 ''
-''movetomany
-bind = , a, movetoworkspacesilent, name:a
-bind = , b, movetoworkspacesilent, name:b
-bind = , c, movetoworkspacesilent, name:c
-bind = , d, movetoworkspacesilent, name:d
-bind = , e, movetoworkspacesilent, name:e
-bind = , f, movetoworkspacesilent, name:f
-bind = , g, movetoworkspacesilent, name:g
-bind = , h, movetoworkspacesilent, name:h
-bind = , i, movetoworkspacesilent, name:i
-bind = , j, movetoworkspacesilent, name:j
-bind = , k, movetoworkspacesilent, name:k
-bind = , l, movetoworkspacesilent, name:l
-bind = , m, movetoworkspacesilent, name:m
-bind = , n, movetoworkspacesilent, name:n
-bind = , o, movetoworkspacesilent, name:o
-bind = , p, movetoworkspacesilent, name:p
-bind = , q, movetoworkspacesilent, name:q
-bind = , r, movetoworkspacesilent, name:r
-bind = , s, movetoworkspacesilent, name:s
-bind = , t, movetoworkspacesilent, name:t
-bind = , u, movetoworkspacesilent, name:u
-bind = , v, movetoworkspacesilent, name:v
-bind = , w, movetoworkspacesilent, name:w
-bind = , x, movetoworkspacesilent, name:x
-bind = , y, movetoworkspacesilent, name:y
-bind = , z, movetoworkspacesilent, name:z
-bind = , 1, movetoworkspacesilent, name:1
-bind = , 2, movetoworkspacesilent, name:2
-bind = , 3, movetoworkspacesilent, name:3
-bind = , 4, movetoworkspacesilent, name:4
-bind = , 5, movetoworkspacesilent, name:5
-bind = , 6, movetoworkspacesilent, name:6
-bind = , 7, movetoworkspacesilent, name:7
-bind = , 8, movetoworkspacesilent, name:8
-bind = , 9, movetoworkspacesilent, name:9
-bind = , 0, movetoworkspacesilent, name:0
+        ''movetomany
+${moveToManyBinds}
 
 bind = , escape, submap, reset
 bind = SUPER, SUPER_L, submap, reset
@@ -322,7 +210,7 @@ submap = reset
     enable = true;
     package = pkgs.rofi;
     theme = "Arc-Dark";
-    terminal = "${pkgs.kitty}/bin/kitty";
+    terminal = "${pkgs.foot}/bin/footclient";
     extraConfig = {
       modi = "drun,run,window";
       show-icons = true;
@@ -372,13 +260,19 @@ submap = reset
   home.packages = with pkgs; [
     cliphist  # Clipboard manager
     wl-clipboard
-    pavucontrol  # Audio control
+    pavucontrol  # Audio control (full)
+    pwvucontrol  # Lightweight PipeWire volume control
     networkmanagerapplet  # Network management
+    networkmanager_dmenu  # Rofi-style network selector
     blueman  # Bluetooth management
     jetbrains-mono  # Font for waybar
     font-awesome  # Icons
     nerd-fonts.jetbrains-mono
     nemo
+    wlogout  # Power menu
+    bibata-cursors
+    hyprcursor
+    grimblast  # Screenshot utility
   ];
 
   # Hyprlock for screen locking (optional)
