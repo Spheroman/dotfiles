@@ -10,12 +10,14 @@
 
     # Media
     noson
+    qimgv
 
     # Productivity
     libreoffice-fresh
     hunspell
     hunspellDicts.en-us
     obsidian
+    krita
 
     # Containers
     distrobox

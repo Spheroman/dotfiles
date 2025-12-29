@@ -85,13 +85,24 @@
   services.openssh.enable = true;
   services.solaar.enable = true;
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+    publish = {
+      enable = true;
+      userServices = true;
+      addresses = true;
+    };
+  };
+
   users.groups.admin = {};
   # User configuration
   users.users.jackw = {
     isNormalUser = true;
     description = "Jack Wen";
     shell = pkgs.zsh;
-    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "admin"];
+    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "admin" "podman"];
     initialPassword = "jackw";  # Only sets password on first user creation
   };
 
@@ -113,7 +124,10 @@
     wget
     git
     htop
+    distrobox
   ];
+
+  programs.nix-ld.enable = true;
 
   # Enable zsh system-wide
   programs.zsh.enable = true;
