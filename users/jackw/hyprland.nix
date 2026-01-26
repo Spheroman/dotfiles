@@ -37,28 +37,9 @@ in
       exec-once = [
         "foot --server &"  # Start foot daemon for fast terminal spawning
         "waybar &"
-        # Start emacs daemon if not running
-        "emacsclient -c -a 'emacs --daemon' || true"
-        # Start on workspace e with emacs
-        "[workspace e silent] emacsclient -c"
-        "[workspace z silent] zen"
         "mako"
         "hyprpaper"
         "wl-paste --watch cliphist store"  # Clipboard history
-      ];
-
-      # Workspace rules - keep emacs in workspace e
-      windowrulev2 = [
-        "workspace name:e,class:^(Emacs)$"
-        # Idle inhibitors - prevent screen lock during fullscreen/video
-        "idleinhibit fullscreen, class:.*"
-        "idleinhibit focus, class:^(mpv|vlc|firefox|zen)$"
-      ];
-
-      # Workspace event handlers to reopen emacs
-      exec = [
-        # This watches for workspace changes and reopens emacs on workspace e if needed
-        "bash -c 'socat -u UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | while read -r line; do if echo \"$line\" | grep -q \"workspace>>e\"; then if ! hyprctl clients | grep -q \"class: Emacs\"; then emacsclient -c & fi; fi; done'"
       ];
 
       # Input configuration
@@ -250,9 +231,13 @@ submap = reset
   services.hyprpaper = {
     enable = true;
     settings = {
-      preload = [ "~/Pictures/wallpaper.jpg" ];
-      wallpaper = [ ",~/Pictures/wallpaper.jpg" ];
       splash = false;
+      wallpaper = [
+        {
+          monitor = "";  # Empty monitor = fallback for all monitors
+          path = "~/Pictures/wallpaper.jpg";
+        }
+      ];
     };
   };
 

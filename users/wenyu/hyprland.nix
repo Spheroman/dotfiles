@@ -16,8 +16,6 @@
       exec-once = [
         "foot --server &"  # Start foot daemon
         "ashell &"
-
-        "[workspace z silent] zen"
         "mako"
         "hyprpaper"
         "wl-paste --watch cliphist store"  # Clipboard history

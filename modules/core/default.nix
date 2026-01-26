@@ -159,5 +159,7 @@
 
   system.stateVersion = "25.11";
 
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+  };
 }

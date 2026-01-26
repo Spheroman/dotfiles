@@ -34,5 +34,8 @@
         sha256 = "sha256-YY3g0xNr/Jm4Q1PJSg27vO+M5jur/lM2a6iTN03BbCA=";
       };
     })
+
+    # Chrome
+    google-chrome
   ];
 }

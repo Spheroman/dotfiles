@@ -18,9 +18,14 @@
       share = true;
     };
 
-    initContent = ''
+    initExtra = ''
+      export ZSH_DISABLE_COMPFIX="true"
       export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
-      fastfetch
+      
+      # Only run fastfetch in interactive shells and if it exists
+      if [[ -o interactive ]] && command -v fastfetch >/dev/null; then
+        fastfetch
+      fi
 
       # Better history search with up/down arrows
       bindkey '^[[A' history-substring-search-up
@@ -49,7 +54,6 @@
       enable = true;
       plugins = [
         "git"
-        "docker"
         "kubectl"
         "fzf"
         "sudo"

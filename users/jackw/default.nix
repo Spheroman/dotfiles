@@ -8,6 +8,7 @@
     ./shell.nix
     ./hyprland.nix
     ./spacemacs.nix
+    ./neovim.nix
     ./waybar.nix
     ./secrets.nix
     # Modular package organization

@@ -2,10 +2,12 @@
 # Development tools and runtimes
 { pkgs, ... }:
 
+let
+  bjarne = pkgs.callPackage ./bjarne.nix { };
+in
 {
   home.packages = with pkgs; [
     # Editors
-    neovim
     vscode
     antigravity
 
@@ -18,10 +20,17 @@
     python313Packages.flake8
     basedpyright
 
+    # JavaScript/TypeScript
+    nodejs
+    bun
+
     # Database
     sqlite
 
     # AI
     lmstudio
+    claude-code
+    gemini-cli
+    bjarne
   ];
 }
