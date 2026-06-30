@@ -36,17 +36,14 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
     │   ├── shell.nix      # Zsh, starship, zoxide, direnv
     │   ├── hyprland.nix   # Hyprland keybinds, rofi, mako, hyprlock
     │   ├── waybar.nix     # Status bar configuration
-    │   ├── spacemacs.nix  # Emacs configuration
     │   ├── secrets.nix    # sops-nix secrets management
     │   ├── programs/
     │   │   ├── foot.nix    # Terminal emulator
     │   │   └── default.nix  # Git, Zen browser settings
-    │   ├── packages/
-    │   │   ├── cli.nix         # CLI tools (ripgrep, fzf, eza, etc.)
-    │   │   ├── development.nix # Dev tools (neovim, PyCharm, Python)
-    │   │   └── applications.nix # GUI apps (Discord, Obsidian, etc.)
-    │   └── files/
-    │       └── .spacemacs  # Spacemacs configuration file
+    │   └── packages/
+    │       ├── cli.nix         # CLI tools (ripgrep, fzf, eza, etc.)
+    │       ├── development.nix # Dev tools (neovim, PyCharm, Python)
+    │       └── applications.nix # GUI apps (Discord, Obsidian, etc.)
     │
     └── wenyu/
         ├── default.nix    # User entry point

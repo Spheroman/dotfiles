@@ -2,9 +2,6 @@
 # Development tools and runtimes
 { pkgs, ... }:
 
-let
-  bjarne = pkgs.callPackage ./bjarne.nix { };
-in
 {
   home.packages = with pkgs; [
     # Editors
@@ -31,6 +28,5 @@ in
     lmstudio
     claude-code
     gemini-cli
-    bjarne
   ];
 }
