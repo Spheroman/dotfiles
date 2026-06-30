@@ -17,13 +17,21 @@
   # Extra PATH/env parity with the pre-nix shell.
   home.sessionVariables = {
     PNPM_HOME = "$HOME/Library/pnpm";
+    HOMEBREW_PREFIX = "/opt/homebrew";
+    HOMEBREW_CELLAR = "/opt/homebrew/Cellar";
+    HOMEBREW_REPOSITORY = "/opt/homebrew";
   };
+  # These go into hm-session-vars (sourced before .zshrc), so `mise activate`
+  # in .zshrc prepends its shims AFTER homebrew and wins (e.g. mise node over
+  # the homebrew node that's pulled in as a brew dependency).
   home.sessionPath = [
     "$HOME/Library/pnpm"
     "$HOME/Library/pnpm/bin" # pnpm binary lives here in this install layout
     "$HOME/.antigravity/antigravity/bin"
     "$HOME/.lmstudio/bin"
     "$HOME/.pub-cache/bin"
+    "/opt/homebrew/bin"
+    "/opt/homebrew/sbin"
   ];
 
   programs.zsh = {
@@ -64,11 +72,8 @@
       rebuild = "darwin-rebuild switch --flake ~/dotfiles#computer-3";
     };
 
-    # brew + fzf-tab fixups. In initContent (not profileExtra) so they apply to
-    # non-login shells too (tmux, VS Code terminal).
+    # fzf-tab fixups (brew is now on PATH via sessionPath, above).
     initContent = ''
-      eval "$(/opt/homebrew/bin/brew shellenv)"
-
       zstyle ':completion:*' menu no
       zstyle ':fzf-tab:*' use-fzf-default-opts yes
       zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 "$realpath"'
@@ -84,6 +89,7 @@
     enableZshIntegration = true;
     settings = {
       add_newline = false;
+      command_timeout = 1000;
       character = {
         success_symbol = "[➜](bold green)";
         error_symbol = "[✗](bold red)";
