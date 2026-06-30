@@ -39,8 +39,39 @@
     onActivation = {
       autoUpdate = false;
       upgrade = false;
-      cleanup = "none";
+      cleanup = "zap"; # remove anything brew-managed that isn't declared here
     };
+    taps = [
+      "artginzburg/tap"
+      "felixkratz/formulae"
+      "grishka/grishka"
+      "mediosz/tap"
+      "nikitabobko/tap"
+      "oven-sh/bun"
+      "sikarugir-app/sikarugir"
+    ];
+    brews = [
+      "artginzburg/tap/sudo-touchid"
+      "cmatrix"
+      "docker-compose"
+      "felixkratz/formulae/borders"
+      "firebase-cli"
+      "flyctl"
+      "gemini-cli"
+      "gnu-tar"
+      "ispell"
+      "libxml2"
+      "mariadb"
+      "osmium-tool"
+      "oven-sh/bun/bun"
+      "pandoc"
+      "qemu"
+      "scrcpy"
+      "tmux"
+      "uv"
+      "virt-manager"
+      "yt-dlp"
+    ];
     casks = [
       # terminal / editors / dev
       "iterm2"
