@@ -38,9 +38,15 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # macOS system management
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, nix-darwin, ... }@inputs:
     let
       system = "x86_64-linux";
 
@@ -98,6 +104,27 @@
             ./hosts/minimal
             # Minimal config doesn't use home-manager or graphical environment
             { nix.settings.experimental-features = [ "nix-command" "flakes" ]; }
+          ];
+        };
+      };
+
+      # macOS (Apple Silicon) — nix-darwin + home-manager
+      darwinConfigurations = {
+        computer-3 = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/mac
+            home-manager.darwinModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "hm-backup";
+                extraSpecialArgs = { inherit inputs; };
+                users.jack = import ./users/jackw/home-darwin.nix;
+              };
+            }
           ];
         };
       };
