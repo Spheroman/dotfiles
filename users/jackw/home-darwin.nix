@@ -20,6 +20,7 @@
   };
   home.sessionPath = [
     "$HOME/Library/pnpm"
+    "$HOME/Library/pnpm/bin" # pnpm binary lives here in this install layout
     "$HOME/.antigravity/antigravity/bin"
     "$HOME/.lmstudio/bin"
     "$HOME/.pub-cache/bin"
@@ -63,16 +64,18 @@
       rebuild = "darwin-rebuild switch --flake ~/dotfiles#computer-3";
     };
 
-    # brew shellenv so brew + brew-managed tools are on PATH (login shells).
-    profileExtra = ''
-      eval "$(/opt/homebrew/bin/brew shellenv)"
-    '';
-
-    # fzf-tab styling.
+    # brew + fzf-tab fixups. In initContent (not profileExtra) so they apply to
+    # non-login shells too (tmux, VS Code terminal).
     initContent = ''
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+
       zstyle ':completion:*' menu no
       zstyle ':fzf-tab:*' use-fzf-default-opts yes
       zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 "$realpath"'
+
+      # fzf's zsh integration rebinds Tab to its own completion; re-enable
+      # fzf-tab afterwards so it owns Tab.
+      enable-fzf-tab
     '';
   };
 
