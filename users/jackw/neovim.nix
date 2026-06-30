@@ -12,7 +12,7 @@
     withPython3 = false;
 
     # Entry point: bootstrap lazy.nvim (config lives in lua/config/*.lua below).
-    extraLuaConfig = ''
+    initLua = ''
       require("config.lazy")
     '';
 
@@ -27,7 +27,7 @@
 
       # Formatters
       stylua
-      nixfmt-rfc-style
+      nixfmt
       black
       prettier
 

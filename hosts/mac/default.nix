@@ -48,7 +48,6 @@
       "jetbrains-toolbox"
       "antigravity"
       "postman"
-      "docker"
       "docker-desktop"
       "utm"
       "vmware-fusion"
@@ -57,7 +56,6 @@
       # browsers
       "google-chrome"
       "zen"
-      "zen-browser"
       "helium-browser"
       "browseros"
       # ai / tooling
@@ -95,10 +93,10 @@
       "grandperspective"
       "raspberry-pi-imager"
       "balenaetcher"
-      # 3d printing / making
+      # 3d printing / making  (autodesk-fusion omitted: its installer can't run
+      # unattended via brew bundle — install it manually)
       "orcaslicer"
       "pronterface"
-      "autodesk-fusion"
       "orange"
       # devices / connectivity
       "android-platform-tools"
