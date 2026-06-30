@@ -16,6 +16,12 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
+    # Activate the standalone mise install (~/.local/bin/mise) for language runtimes.
+    # We deliberately avoid nixpkgs' mise: its darwin build fails a setuid test in the sandbox.
+    initContent = ''
+      eval "$(''${HOME}/.local/bin/mise activate zsh)"
+    '';
+
     history = {
       size = 50000;
       save = 50000;
@@ -71,17 +77,11 @@
     enableZshIntegration = true;
   };
 
-  # mise manages language runtimes (Node/Java/Rust/Ruby); uv manages Python.
-  programs.mise = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
   programs.git = {
     enable = true;
-    userName = "Jack Wen";
-    userEmail = "jackwen04@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Jack Wen";
+      user.email = "jackwen04@gmail.com";
       url."git@github.com:".insteadOf = "https://github.com/";
     };
   };
