@@ -133,7 +133,8 @@
     settings = {
       user.name = "Jack Wen";
       user.email = "jackwen04@gmail.com";
-      url."git@github.com:".insteadOf = "https://github.com/";
+      # No git@github insteadOf on macOS: there's no SSH key here, so push/fetch
+      # over HTTPS via the gh/osxkeychain credential helper instead.
     };
   };
 
