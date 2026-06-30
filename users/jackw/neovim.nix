@@ -1,6 +1,6 @@
 # users/jackw/neovim.nix
 # Neovim configuration with LazyVim support
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   programs.neovim = {
@@ -8,6 +8,13 @@
     defaultEditor = true;  # Set as $EDITOR
     viAlias = true;
     vimAlias = true;
+    withRuby = false;
+    withPython3 = false;
+
+    # Entry point: bootstrap lazy.nvim (config lives in lua/config/*.lua below).
+    extraLuaConfig = ''
+      require("config.lazy")
+    '';
 
     # Install packages needed by LazyVim and common plugins
     extraPackages = with pkgs; [
@@ -15,8 +22,8 @@
       lua-language-server
       nil  # Nix LSP
       basedpyright  # Python LSP (you already use this)
-      nodePackages.typescript-language-server
-      nodePackages.bash-language-server
+      typescript-language-server
+      bash-language-server
 
       # Formatters
       stylua
@@ -24,27 +31,18 @@
       black
       prettier
 
-      # Linters
-      nodePackages.eslint
-
       # Tools required by LazyVim
       ripgrep  # Telescope grep
       fd       # Telescope find
-      gcc      # Treesitter compilation
       git
       lazygit  # Optional: git UI
-
-      # Clipboard support
-      wl-clipboard  # For Wayland (you use Hyprland)
-    ];
+    ]
+    # Treesitter needs a C compiler; clipboard tooling differs per platform.
+    ++ lib.optionals pkgs.stdenv.isLinux [ gcc wl-clipboard ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [ clang ];
   };
 
   # LazyVim configuration files
-  home.file.".config/nvim/init.lua".text = ''
-    -- bootstrap lazy.nvim, LazyVim and your plugins
-    require("config.lazy")
-  '';
-
   home.file.".config/nvim/lua/config/lazy.lua".text = ''
     local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
     if not (vim.uv or vim.loop).fs_stat(lazypath) then

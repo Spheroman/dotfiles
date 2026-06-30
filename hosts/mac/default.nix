@@ -42,11 +42,77 @@
       cleanup = "none";
     };
     casks = [
+      # terminal / editors / dev
       "iterm2"
       "visual-studio-code"
+      "jetbrains-toolbox"
+      "antigravity"
+      "postman"
+      "docker"
+      "docker-desktop"
+      "utm"
+      "vmware-fusion"
+      "kegworks"
+      "playcover-community"
+      # browsers
       "google-chrome"
+      "zen"
+      "zen-browser"
+      "helium-browser"
+      "browseros"
+      # ai / tooling
+      "claude-code@latest"
+      "codex"
+      "codex-app"
+      "t3-code"
+      "lm-studio"
+      # productivity / notes
       "obsidian"
+      "libreoffice"
+      "basictex"
+      "launchcontrol"
+      # communication
       "discord"
+      "microsoft-teams"
+      "whatsapp"
+      # media / creative
+      "obs"
+      "audacity"
+      "iina"
+      "krita"
+      "inkscape"
+      "pinta"
+      "aria-maestosa"
+      # window mgmt / system utils
+      "aerospace"
+      "aldente"
+      "jordanbaird-ice"
+      "linearmouse"
+      "logi-options+"
+      "stats"
+      "shottr"
+      "keka"
+      "grandperspective"
+      "raspberry-pi-imager"
+      "balenaetcher"
+      # 3d printing / making
+      "orcaslicer"
+      "pronterface"
+      "autodesk-fusion"
+      "orange"
+      # devices / connectivity
+      "android-platform-tools"
+      "vysor"
+      "neardrop"
+      "sonos"
+      # gaming
+      "steam"
+      "minecraft"
+      # fonts / X11 / misc
+      "font-source-code-pro"
+      "xquartz"
+      "miniconda"
+      "microsoft-auto-update"
     ];
   };
 
