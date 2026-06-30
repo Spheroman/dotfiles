@@ -16,12 +16,6 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
-    # Activate the standalone mise install (~/.local/bin/mise) for language runtimes.
-    # We deliberately avoid nixpkgs' mise: its darwin build fails a setuid test in the sandbox.
-    initContent = ''
-      eval "$(''${HOME}/.local/bin/mise activate zsh)"
-    '';
-
     history = {
       size = 50000;
       save = 50000;
@@ -73,6 +67,13 @@
   };
 
   programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # mise (managed by nix, with the sandbox-incompatible test patched out via
+  # the overlay in hosts/mac) handles language runtimes; uv handles Python.
+  programs.mise = {
     enable = true;
     enableZshIntegration = true;
   };
