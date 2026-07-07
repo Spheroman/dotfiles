@@ -39,12 +39,17 @@
     onActivation = {
       autoUpdate = false;
       upgrade = false;
-      cleanup = "zap"; # remove anything brew-managed that isn't declared here
+      # "zap" runs `brew bundle --cleanup --zap`, which also *untaps* any
+      # repository not listed in `taps` below. That's fine as long as every tap
+      # we rely on is declared here (e.g. kegworks-app/kegworks) — otherwise it
+      # gets removed on each rebuild and has to be re-added by hand.
+      cleanup = "zap";
     };
     taps = [
       "artginzburg/tap"
       "felixkratz/formulae"
       "grishka/grishka"
+      "kegworks-app/kegworks" # provides the kegworks cask
       "mediosz/tap"
       "nikitabobko/tap"
       "oven-sh/bun"
@@ -82,7 +87,11 @@
       "docker-desktop"
       "utm"
       "vmware-fusion"
-      "kegworks"
+      # Casks from third-party taps are fully-qualified (user/tap/token) so
+      # nix-darwin's `trusted: true` actually persists to Homebrew's trust store
+      # — a bare token can't be trusted, so the tap stays untrusted and the cask
+      # refuses to load until re-authorized after every rebuild.
+      "kegworks-app/kegworks/kegworks"
       "playcover-community"
       # browsers
       "google-chrome"
@@ -106,6 +115,7 @@
       "whatsapp"
       # media / creative
       "obs"
+      "droidcam-obs" # use phone as a camera in OBS (depends on obs)
       "audacity"
       "iina"
       "krita"
@@ -113,7 +123,7 @@
       "pinta"
       "aria-maestosa"
       # window mgmt / system utils
-      "aerospace"
+      "nikitabobko/tap/aerospace"
       "aldente"
       "jordanbaird-ice"
       "linearmouse"
@@ -132,7 +142,7 @@
       # devices / connectivity
       "android-platform-tools"
       "vysor"
-      "neardrop"
+      "grishka/grishka/neardrop"
       "sonos"
       # gaming
       "steam"

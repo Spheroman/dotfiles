@@ -54,7 +54,7 @@
     git
     antigravity
     jetbrains.webstorm
-    jetbrains.pycharm-professional
+    jetbrains.pycharm
     android-studio
     gh
     

@@ -9,7 +9,7 @@
     antigravity
 
     # IDEs
-    jetbrains.pycharm-professional
+    jetbrains.pycharm
 
     # Python
     python313

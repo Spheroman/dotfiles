@@ -153,6 +153,8 @@
     fastfetch
     glow
     hugo
+    # git / github
+    gh
     # archives
     zip
     unzip

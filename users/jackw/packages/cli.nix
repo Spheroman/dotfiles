@@ -5,7 +5,7 @@
 {
   home.packages = with pkgs; [
     # CLI tools
-    neofetch
+    fastfetch # neofetch was removed upstream (unmaintained)
     nnn
     zip
     xz
