@@ -36,6 +36,11 @@
     "/opt/homebrew/sbin"
   ];
 
+  # AeroSpace reads ~/.aerospace.toml directly; the cask comes from
+  # hosts/mac/common.nix. Managed as a file rather than generated from Nix
+  # so it stays a stock aerospace.toml that upstream docs apply to.
+  home.file.".aerospace.toml".source = ./programs/aerospace.toml;
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
