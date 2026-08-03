@@ -3,7 +3,7 @@
 # merged with the NixOS jackw config via platform guards in a later refactor.
 #
 # `hostname`, `username`, and `gitEmail` come from mkDarwin in flake.nix.
-{ pkgs, lib, hostname, username, gitEmail, ... }:
+{ config, pkgs, lib, hostname, username, gitEmail, ... }:
 
 {
   imports = [
@@ -40,6 +40,25 @@
   # hosts/mac/common.nix. Managed as a file rather than generated from Nix
   # so it stays a stock aerospace.toml that upstream docs apply to.
   home.file.".aerospace.toml".source = ./programs/aerospace.toml;
+
+  # LinearMouse is configured through its GUI, which writes this file back —
+  # a read-only store symlink would make its settings pane fail to save. Point
+  # at the working tree so GUI changes land in the repo and show up in
+  # `git status`, same as lazy-lock.json below.
+  home.file.".config/linearmouse/linearmouse.json".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/users/jackw/programs/linearmouse.json";
+
+  # lazy.nvim rewrites lazy-lock.json whenever plugins are installed or
+  # updated, so this can't be a read-only store symlink — a fresh machine
+  # would fail on first launch while installing plugins. mkOutOfStoreSymlink
+  # points at the working tree instead, so :Lazy update edits the repo copy
+  # directly and the change shows up in `git status`.
+  #
+  # This is the one place the config assumes the repo lives at ~/dotfiles.
+  home.file.".config/nvim/lazy-lock.json".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/users/jackw/programs/lazy-lock.json";
 
   programs.zsh = {
     enable = true;
@@ -133,6 +152,15 @@
   programs.mise = {
     enable = true;
     enableZshIntegration = true;
+    globalConfig = {
+      tools = {
+        java = "lts";
+        node = "lts";
+        ruby = "3";
+        rust = "latest";
+      };
+      settings.idiomatic_version_file_enable_tools = [ "ruby" ];
+    };
   };
 
   # No git@github insteadOf on macOS: there's no SSH key here, so push/fetch
@@ -143,8 +171,26 @@
   # Passing `gitEmail = null` instead leaves user.email unset, which makes git
   # refuse to commit until it's set per-repo — useful for a machine where no
   # single default identity is right.
+  # gh as a git credential helper, wired up by home-manager rather than by
+  # `gh auth setup-git`. The imperative command writes a hardcoded store path
+  # into ~/.gitconfig, which breaks once that gh build is garbage-collected;
+  # this way the path is refreshed on every rebuild and stays a GC root.
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper = {
+      enable = true;
+      hosts = [ "https://github.com" "https://gist.github.com" ];
+    };
+  };
+
   programs.git = {
     enable = true;
+
+    ignores = [ "**/.claude/settings.local.json" ];
+
+    settings.credential.helper = "osxkeychain";
+    settings.core.autocrlf = "input";
+
     settings.user = {
       # Merge at the `user` level: `//` is shallow, so merging whole `settings`
       # attrsets here would drop `name` on any host that supplies an email.
@@ -169,8 +215,7 @@
     fastfetch
     glow
     hugo
-    # git / github
-    gh
+    # git / github  (gh comes from programs.gh, above)
     # archives
     zip
     unzip

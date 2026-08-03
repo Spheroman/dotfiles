@@ -13,8 +13,10 @@ after-startup-command = [
 'exec-and-forget borders'
 ]
 
-# Start AeroSpace at login
-start-at-login = true
+# Startup is owned by the launchd agent in hosts/mac/common.nix, so AeroSpace
+# must not also register itself as a macOS login item — that would start it
+# twice. See the launchd.user.agents block there.
+start-at-login = false
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true

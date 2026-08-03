@@ -157,5 +157,42 @@
     ];
   };
 
+  # Start-at-login, declaratively.
+  #
+  # macOS login items live in the per-machine SMAppService database, not in
+  # any file, so they don't survive to a new Mac — which is why AeroSpace
+  # didn't autostart there despite `start-at-login = true` in aerospace.toml.
+  # That setting only tells AeroSpace to register itself once it has been
+  # launched by hand; it's now false, and launchd owns startup instead.
+  #
+  # RunAtLoad without KeepAlive matches login-item behaviour: started at
+  # login, but quitting the app keeps it quit until next login.
+  #
+  # borders is deliberately absent — aerospace.toml already launches it via
+  # `after-startup-command`, and a second agent would start it twice.
+  launchd.user.agents = {
+    aerospace = {
+      serviceConfig = {
+        ProgramArguments = [ "/Applications/AeroSpace.app/Contents/MacOS/AeroSpace" ];
+        RunAtLoad = true;
+        ProcessType = "Interactive";
+      };
+    };
+    ice = {
+      serviceConfig = {
+        ProgramArguments = [ "/Applications/Ice.app/Contents/MacOS/Ice" ];
+        RunAtLoad = true;
+        ProcessType = "Interactive";
+      };
+    };
+    stats = {
+      serviceConfig = {
+        ProgramArguments = [ "/Applications/Stats.app/Contents/MacOS/Stats" ];
+        RunAtLoad = true;
+        ProcessType = "Interactive";
+      };
+    };
+  };
+
   system.stateVersion = 6;
 }
