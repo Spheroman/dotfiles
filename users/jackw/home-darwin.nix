@@ -1,15 +1,17 @@
 # users/jackw/home-darwin.nix
-# macOS home-manager config (computer-3). Standalone for now; will be merged
-# with the NixOS jackw config via platform guards in a later refactor.
-{ pkgs, ... }:
+# macOS home-manager config, shared by every Mac. Standalone for now; will be
+# merged with the NixOS jackw config via platform guards in a later refactor.
+#
+# `hostname`, `username`, and `gitEmail` come from mkDarwin in flake.nix.
+{ pkgs, lib, hostname, username, gitEmail, ... }:
 
 {
   imports = [
     ./neovim.nix
   ];
 
-  home.username = "jack";
-  home.homeDirectory = "/Users/jack";
+  home.username = username;
+  home.homeDirectory = "/Users/${username}";
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
@@ -69,7 +71,7 @@
       lt = "eza --tree --icons -L 2";
       cat = "bat";
       cc = "claude --dangerously-skip-permissions";
-      rebuild = "darwin-rebuild switch --flake ~/dotfiles#computer-3";
+      rebuild = "darwin-rebuild switch --flake ~/dotfiles#${hostname}";
     };
 
     # fzf-tab fixups (brew is now on PATH via sessionPath, above).
@@ -128,13 +130,22 @@
     enableZshIntegration = true;
   };
 
+  # No git@github insteadOf on macOS: there's no SSH key here, so push/fetch
+  # over HTTPS via the gh/osxkeychain credential helper instead.
+  #
+  # Each host supplies its own identity via mkDarwin's `gitEmail`, so work
+  # commits are attributed to the work address rather than the personal one.
+  # Passing `gitEmail = null` instead leaves user.email unset, which makes git
+  # refuse to commit until it's set per-repo — useful for a machine where no
+  # single default identity is right.
   programs.git = {
     enable = true;
-    settings = {
-      user.name = "Jack Wen";
-      user.email = "jackwen04@gmail.com";
-      # No git@github insteadOf on macOS: there's no SSH key here, so push/fetch
-      # over HTTPS via the gh/osxkeychain credential helper instead.
+    settings.user = {
+      # Merge at the `user` level: `//` is shallow, so merging whole `settings`
+      # attrsets here would drop `name` on any host that supplies an email.
+      name = "Jack Wen";
+    } // lib.optionalAttrs (gitEmail != null) {
+      email = gitEmail;
     };
   };
 

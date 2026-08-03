@@ -1,8 +1,13 @@
-# hosts/mac — nix-darwin system config for the Apple Silicon Mac (computer-3)
-{ pkgs, ... }:
+# hosts/mac/common.nix — settings shared by every Mac.
+#
+# Per-machine divergence (app list, homebrew cleanup policy) lives in
+# hosts/mac/personal.nix and hosts/mac/work.nix, which are appended by the
+# `mkDarwin` helper in flake.nix. Homebrew's tap/brew/cask options are lists,
+# so those files *add* to what's here rather than replacing it.
+{ pkgs, lib, username, hostPlatform, ... }:
 
 {
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  nixpkgs.hostPlatform = hostPlatform;
   nixpkgs.config.allowUnfree = true;
 
   # mise has a test that asserts setuid bits are preserved, but the darwin Nix
@@ -23,37 +28,45 @@
   nix.enable = false;
 
   # Required for homebrew + system.defaults user-scoped options.
-  system.primaryUser = "jack";
-  users.users.jack = {
-    name = "jack";
-    home = "/Users/jack";
+  system.primaryUser = username;
+  users.users.${username} = {
+    name = username;
+    home = "/Users/${username}";
   };
 
   # Make zsh a system shell so /etc/zshrc sources home-manager session vars.
   programs.zsh.enable = true;
 
   # Homebrew — declaratively manage GUI casks (brew still does the install).
-  # Conservative for now: no auto-upgrade/zap until the full cask list is ported.
   homebrew = {
     enable = true;
     onActivation = {
-      autoUpdate = false;
+      # Runs `brew update` before the bundle. Costs 10-30s per rebuild, but
+      # without it Homebrew's own version only moves when updated by hand, and
+      # once it drifts far enough behind the cask API every rebuild dies at
+      # this step with "undefined method '...' for Cask" — which aborts
+      # activation partway, before /run/current-system is updated.
+      autoUpdate = true;
+      # Still no automatic package upgrades: only Homebrew itself moves.
       upgrade = false;
-      # "zap" runs `brew bundle --cleanup --zap`, which also *untaps* any
-      # repository not listed in `taps` below. That's fine as long as every tap
-      # we rely on is declared here (e.g. kegworks-app/kegworks) — otherwise it
-      # gets removed on each rebuild and has to be re-added by hand.
-      cleanup = "zap";
+      # Set per host. "zap" runs `brew bundle --cleanup --zap`, which removes
+      # anything not listed below *and* deletes its support files and prefs —
+      # and it untaps any repository not named in `taps`. Good for keeping a
+      # personal machine honest, hazardous where software might be installed
+      # out-of-band; see hosts/mac/work.nix.
+      cleanup = lib.mkDefault "zap";
     };
+    # Casks from third-party taps are fully-qualified (user/tap/token) so
+    # nix-darwin's `trusted: true` actually persists to Homebrew's trust store
+    # — a bare token can't be trusted, so the tap stays untrusted and the cask
+    # refuses to load until re-authorized after every rebuild.
     taps = [
-      "artginzburg/tap"
-      "felixkratz/formulae"
-      "grishka/grishka"
-      "kegworks-app/kegworks" # provides the kegworks cask
+      "artginzburg/tap" # sudo-touchid
+      "felixkratz/formulae" # borders
+      "grishka/grishka" # neardrop
       "mediosz/tap"
-      "nikitabobko/tap"
-      "oven-sh/bun"
-      "sikarugir-app/sikarugir"
+      "nikitabobko/tap" # aerospace
+      "oven-sh/bun" # bun
     ];
     brews = [
       "artginzburg/tap/sudo-touchid"
@@ -81,18 +94,10 @@
       # terminal / editors / dev
       "iterm2"
       "visual-studio-code"
-      "jetbrains-toolbox"
       "antigravity"
       "postman"
       "docker-desktop"
       "utm"
-      "vmware-fusion"
-      # Casks from third-party taps are fully-qualified (user/tap/token) so
-      # nix-darwin's `trusted: true` actually persists to Homebrew's trust store
-      # — a bare token can't be trusted, so the tap stays untrusted and the cask
-      # refuses to load until re-authorized after every rebuild.
-      "kegworks-app/kegworks/kegworks"
-      "playcover-community"
       # browsers
       "google-chrome"
       "zen"
@@ -144,9 +149,6 @@
       "vysor"
       "grishka/grishka/neardrop"
       "sonos"
-      # gaming
-      "steam"
-      "minecraft"
       # fonts / X11 / misc
       "font-source-code-pro"
       "xquartz"

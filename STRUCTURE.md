@@ -13,9 +13,13 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
 │   ├── desktop/           # Desktop workstation
 │   │   ├── default.nix    # Desktop-specific settings, imports modules
 │   │   └── hardware-configuration.nix  # Auto-generated hardware config
-│   ├── laptop/            # MacBook with T2 chip
+│   ├── laptop/            # MacBook with T2 chip (NixOS)
 │   │   ├── default.nix    # Laptop-specific settings, T2 fixes
 │   │   └── hardware-configuration.nix
+│   ├── mac/               # Apple Silicon Macs (nix-darwin, not NixOS)
+│   │   ├── common.nix     # Shared: homebrew base, overlays, user
+│   │   ├── personal.nix   # computer-3 — games, personal-license apps
+│   │   └── work.nix       # work — safer homebrew cleanup, no games
 │   └── minimal/           # TTY-only fallback configuration
 │       └── default.nix
 │
@@ -113,3 +117,37 @@ rebuild              # Switch current machine
 rebuild-desktop      # Explicitly use desktop config
 rebuild-laptop       # Explicitly use laptop config
 ```
+
+## macOS (nix-darwin)
+
+Macs are built by the `mkDarwin` helper in `flake.nix` rather than declared
+one at a time:
+
+```nix
+computer-3 = mkDarwin {
+  hostname = "computer-3";
+  gitEmail = "jackwen04@gmail.com";
+  extraModules = [ ./hosts/mac/personal.nix ];
+};
+```
+
+| Argument | Default | Purpose |
+|----------|---------|---------|
+| `hostname` | — | Flake attr to rebuild against; also fills the `rebuild` alias |
+| `username` | `"jack"` | Drives `system.primaryUser`, `users.users.*`, home dir |
+| `hostPlatform` | `"aarch64-darwin"` | Set `x86_64-darwin` for an Intel Mac |
+| `gitEmail` | `null` | Per-host git identity; `null` leaves `user.email` unset, forcing per-repo config |
+| `extraModules` | `[ ]` | Per-host modules layered on `hosts/mac/common.nix` |
+
+Homebrew's `taps`/`brews`/`casks` are list options, so per-host files **add**
+to the shared set in `common.nix` — they never replace it. Anything that
+should exist on only one machine goes in that machine's file.
+
+`onActivation.cleanup` is `mkDefault "zap"` in `common.nix` (removes anything
+undeclared *and* deletes its data and untaps repos). `work.nix` lowers it to
+`"uninstall"`, because a machine where software may be installed out-of-band
+shouldn't have a rebuild silently eat it.
+
+Adding a Mac is one entry in `darwinConfigurations`. Rebuild with
+`darwin-rebuild switch --flake ~/dotfiles#<hostname>` (the `rebuild` alias is
+already host-correct).

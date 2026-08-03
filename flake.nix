@@ -74,6 +74,38 @@
         inputs.solaar.nixosModules.default
       ];
 
+      # One Mac. `extraModules` carries the per-host divergence (app list,
+      # homebrew cleanup policy); everything else is shared via
+      # hosts/mac/common.nix and users/jackw/home-darwin.nix.
+      #
+      # `gitEmail = null` leaves user.email unset, so git refuses to commit
+      # until it's configured per-repo — deliberate on a machine where commits
+      # belong to someone else.
+      mkDarwin =
+        { hostname
+        , username ? "jack"
+        , hostPlatform ? "aarch64-darwin"
+        , gitEmail ? null
+        , extraModules ? [ ]
+        }:
+        nix-darwin.lib.darwinSystem {
+          system = hostPlatform;
+          specialArgs = { inherit inputs hostname username hostPlatform; };
+          modules = [
+            ./hosts/mac/common.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "hm-backup";
+                extraSpecialArgs = { inherit inputs hostname username gitEmail; };
+                users.${username} = import ./users/jackw/home-darwin.nix;
+              };
+            }
+          ] ++ extraModules;
+        };
+
     in {
       nixosConfigurations = {
         # Desktop configuration
@@ -110,22 +142,20 @@
 
       # macOS (Apple Silicon) — nix-darwin + home-manager
       darwinConfigurations = {
-        computer-3 = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./hosts/mac
-            home-manager.darwinModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                backupFileExtension = "hm-backup";
-                extraSpecialArgs = { inherit inputs; };
-                users.jack = import ./users/jackw/home-darwin.nix;
-              };
-            }
-          ];
+        # Personal Mac.
+        computer-3 = mkDarwin {
+          hostname = "computer-3";
+          gitEmail = "jackwen04@gmail.com";
+          extraModules = [ ./hosts/mac/personal.nix ];
+        };
+
+        # Card store work Mac. Keyed on the name "work" rather than the
+        # machine's hostname, so `rebuild` is correct without having to rename
+        # the box; change `hostname` here if you'd rather match it.
+        work = mkDarwin {
+          hostname = "work";
+          gitEmail = "jack@tabletopvillage.com";
+          extraModules = [ ./hosts/mac/work.nix ];
         };
       };
     };
