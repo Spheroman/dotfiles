@@ -95,7 +95,10 @@
       lt = "eza --tree --icons -L 2";
       cat = "bat";
       cc = "claude --dangerously-skip-permissions";
-      rebuild = "darwin-rebuild switch --flake ~/dotfiles#${hostname}";
+      # sudo is required: darwin-rebuild refuses to activate as non-root
+      # ("system activation must now be run as root") rather than escalating
+      # on its own. It re-drops to $SUDO_USER for the home-manager part.
+      rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#${hostname}";
     };
 
     # fzf-tab fixups (brew is now on PATH via sessionPath, above).
