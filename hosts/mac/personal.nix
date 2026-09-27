@@ -25,6 +25,8 @@
       "playcover-community"
       "steam"
       "minecraft"
+      # messaging apps
+      "signal"
     ];
   };
 }
