@@ -94,7 +94,6 @@
       # terminal / editors / dev
       "iterm2"
       "visual-studio-code"
-      "antigravity"
       "postman"
       "docker-desktop"
       "utm"

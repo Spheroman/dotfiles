@@ -29,7 +29,6 @@
   home.sessionPath = [
     "$HOME/Library/pnpm"
     "$HOME/Library/pnpm/bin" # pnpm binary lives here in this install layout
-    "$HOME/.antigravity/antigravity/bin"
     "$HOME/.lmstudio/bin"
     "$HOME/.pub-cache/bin"
     "/opt/homebrew/bin"

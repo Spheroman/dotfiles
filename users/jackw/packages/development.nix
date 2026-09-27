@@ -6,7 +6,6 @@
   home.packages = with pkgs; [
     # Editors
     vscode
-    antigravity
 
     # IDEs
     jetbrains.pycharm
