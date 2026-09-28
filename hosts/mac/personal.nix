@@ -27,6 +27,8 @@
       "minecraft"
       # messaging apps
       "signal"
+      # embroidery — Inkscape extension; inkscape itself comes from common.nix
+      "inkstitch"
     ];
   };
 }
