@@ -129,10 +129,8 @@
       # window mgmt / system utils
       "nikitabobko/tap/aerospace"
       "aldente"
-      "thaw" # menu bar manager; successor to the now-stale jordanbaird-ice
       "linearmouse"
       "logi-options+"
-      "stats"
       "shottr"
       "keka"
       "grandperspective"
@@ -173,20 +171,6 @@
     aerospace = {
       serviceConfig = {
         ProgramArguments = [ "/Applications/AeroSpace.app/Contents/MacOS/AeroSpace" ];
-        RunAtLoad = true;
-        ProcessType = "Interactive";
-      };
-    };
-    thaw = {
-      serviceConfig = {
-        ProgramArguments = [ "/Applications/Thaw.app/Contents/MacOS/Thaw" ];
-        RunAtLoad = true;
-        ProcessType = "Interactive";
-      };
-    };
-    stats = {
-      serviceConfig = {
-        ProgramArguments = [ "/Applications/Stats.app/Contents/MacOS/Stats" ];
         RunAtLoad = true;
         ProcessType = "Interactive";
       };
