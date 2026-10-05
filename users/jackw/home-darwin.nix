@@ -22,6 +22,7 @@
     HOMEBREW_PREFIX = "/opt/homebrew";
     HOMEBREW_CELLAR = "/opt/homebrew/Cellar";
     HOMEBREW_REPOSITORY = "/opt/homebrew";
+    BAT_PAGER = "less -R --mouse";
   };
   # These go into hm-session-vars (sourced before .zshrc), so `mise activate`
   # in .zshrc prepends its shims AFTER homebrew and wins (e.g. mise node over
