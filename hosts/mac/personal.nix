@@ -9,6 +9,11 @@
 # declared here is the point.
 { username, ... }:
 
+let
+  # Battery % at or below which lid-closed awake mode switches itself off
+  # (on battery only). See the lid-awake section below.
+  lidAwakeMinBattery = 20;
+in
 {
   homebrew = {
     taps = [
@@ -40,11 +45,32 @@
   # an external display, and it needs root, so sudoers allows exactly the two
   # toggle commands without a password. SwiftBar runs the plugin below; the
   # 10s in its filename is the refresh interval, so the icon also catches
-  # changes made from a terminal.
+  # changes made from a terminal. The low-battery cutoff is a separate root
+  # daemon rather than part of the plugin, so it still fires if SwiftBar is
+  # quit or crashes.
 
   security.sudo.extraConfig = ''
     ${username} ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 0, /usr/bin/pmset -a disablesleep 1
   '';
+
+  launchd.daemons.lid-awake-low-battery = {
+    script = ''
+      /usr/bin/pmset -g | /usr/bin/grep -Eq 'SleepDisabled[[:space:]]+1' || exit 0
+      batt=$(/usr/bin/pmset -g batt)
+      echo "$batt" | /usr/bin/grep -q "Battery Power" || exit 0
+      pct=$(echo "$batt" | /usr/bin/grep -Eo '[0-9]+%' | /usr/bin/head -1 | /usr/bin/tr -d %)
+      [ -n "$pct" ] && [ "$pct" -le ${toString lidAwakeMinBattery} ] || exit 0
+      /usr/bin/pmset -a disablesleep 0
+      if /usr/sbin/ioreg -r -k AppleClamshellState -d 4 \
+          | /usr/bin/grep -q '"AppleClamshellState" = Yes'; then
+        /usr/bin/pmset sleepnow
+      fi
+    '';
+    serviceConfig = {
+      RunAtLoad = true;
+      StartInterval = 30;
+    };
+  };
 
   system.defaults.CustomUserPreferences."com.ameba.SwiftBar" = {
     PluginDirectory = "/Users/${username}/.config/swiftbar";
@@ -67,6 +93,7 @@
         echo ":cup.and.saucer.fill:"
         echo "---"
         echo "Awake with lid closed: On"
+        echo "Turns off at ${toString lidAwakeMinBattery}% on battery | size=11"
         echo "Turn off | bash='$0' param1=toggle terminal=false refresh=true"
       else
         echo ":moon.zzz:"
