@@ -218,6 +218,8 @@
     glow
     hugo
     # git / github  (gh comes from programs.gh, above)
+    # dev
+    supabase-cli # newgit's supabase template test runs `supabase init`
     # archives
     zip
     unzip
