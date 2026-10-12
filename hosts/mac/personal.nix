@@ -36,6 +36,8 @@ in
       "inkstitch"
       # menu bar — runs the lid-awake toggle below
       "swiftbar"
+      # tailnet client; signs in as a user device (see ~/work/machines/tailscale)
+      "tailscale-app"
     ];
   };
 
