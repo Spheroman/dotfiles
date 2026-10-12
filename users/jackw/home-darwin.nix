@@ -150,7 +150,7 @@
     defaultOptions = [ "--height 40%" "--layout=reverse" "--border" ];
   };
 
-  # mise (nix-managed, sandbox test patched in hosts/mac overlay) handles
+  # mise (nix-managed) handles
   # language runtimes; uv handles Python.
   programs.mise = {
     enable = true;

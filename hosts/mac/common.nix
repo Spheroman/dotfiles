@@ -10,19 +10,6 @@
   nixpkgs.hostPlatform = hostPlatform;
   nixpkgs.config.allowUnfree = true;
 
-  # mise has a test that asserts setuid bits are preserved, but the darwin Nix
-  # sandbox strips setuid/setgid bits by policy, so that one test always fails.
-  # Skip just that test so mise can be built/managed through nix.
-  nixpkgs.overlays = [
-    (final: prev: {
-      mise = prev.mise.overrideAttrs (old: {
-        checkFlags = (old.checkFlags or [ ]) ++ [
-          "--skip=oci::layer::tests::preserve_metadata_dir_layer_keeps_special_permission_bits"
-        ];
-      });
-    })
-  ];
-
   # Nix itself is managed by the official installer's daemon, not nix-darwin.
   # (Avoids nix-darwin trying to take over the existing daemon / nix.conf.)
   nix.enable = false;
