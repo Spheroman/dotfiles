@@ -8,6 +8,7 @@
 {
   imports = [
     ./neovim.nix
+    ./secrets-darwin.nix
   ];
 
   home.username = username;
