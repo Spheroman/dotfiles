@@ -24,6 +24,11 @@
   # Make zsh a system shell so /etc/zshrc sources home-manager session vars.
   programs.zsh.enable = true;
 
+  # Touch ID for sudo. nix-darwin owns /etc/pam.d/sudo_local (a symlink into
+  # the store), so tools that edit that file in place, like the sudo-touchid
+  # formula, get overwritten on every rebuild.
+  security.pam.services.sudo_local.touchIdAuth = true;
+
   # Homebrew — declaratively manage GUI casks (brew still does the install).
   homebrew = {
     enable = true;
@@ -48,7 +53,6 @@
     # — a bare token can't be trusted, so the tap stays untrusted and the cask
     # refuses to load until re-authorized after every rebuild.
     taps = [
-      "artginzburg/tap" # sudo-touchid
       "felixkratz/formulae" # borders
       "grishka/grishka" # neardrop
       "mediosz/tap"
@@ -56,7 +60,6 @@
       "oven-sh/bun" # bun
     ];
     brews = [
-      "artginzburg/tap/sudo-touchid"
       "cmatrix"
       "docker-compose"
       "felixkratz/formulae/borders"
