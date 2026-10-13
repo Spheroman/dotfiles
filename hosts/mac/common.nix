@@ -115,7 +115,6 @@
       "krita"
       "inkscape"
       "pinta"
-      "aria-maestosa"
       # window mgmt / system utils
       "nikitabobko/tap/aerospace"
       "aldente"
@@ -129,7 +128,6 @@
       # 3d printing / making  (autodesk-fusion omitted: its installer can't run
       # unattended via brew bundle — install it manually)
       "orcaslicer"
-      "pronterface"
       "orange"
       # devices / connectivity
       "android-platform-tools"
@@ -138,6 +136,7 @@
       "sonos"
       # fonts / X11 / misc
       "font-source-code-pro"
+      "font-space-mono-nerd-font"
       "xquartz"
       "miniconda"
       "microsoft-auto-update"

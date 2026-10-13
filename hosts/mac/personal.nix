@@ -17,23 +17,18 @@ in
 {
   homebrew = {
     taps = [
-      "kegworks-app/kegworks" # provides the kegworks cask
       "sikarugir-app/sikarugir"
     ];
     casks = [
-      # jetbrains-toolbox and vmware-fusion are personal-only: their licenses
-      # distinguish personal from commercial use, so they stay off the work Mac.
+      # jetbrains-toolbox is personal-only: its license
+      # distinguishes personal from commercial use, so it stays off the work Mac.
       "jetbrains-toolbox"
-      "vmware-fusion"
       # gaming / compatibility layers
-      "kegworks-app/kegworks/kegworks"
       "playcover-community"
       "steam"
       "minecraft"
       # messaging apps
       "signal"
-      # embroidery — Inkscape extension; inkscape itself comes from common.nix
-      "inkstitch"
       # menu bar — runs the lid-awake toggle below
       "swiftbar"
       # tailnet client; signs in as a user device (see ~/work/machines/tailscale)
