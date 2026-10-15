@@ -1,7 +1,7 @@
 # dotfiles
 
-Nix configuration for every machine I use: NixOS on the desktop and the T2
-MacBook, nix-darwin + home-manager on the Apple Silicon Macs.
+Nix configuration for every machine I use: NixOS on the desktop, the T2
+MacBook, and any new PC, nix-darwin + home-manager on the Apple Silicon Macs.
 
 See [STRUCTURE.md](STRUCTURE.md) for how the repo is laid out and where a given
 setting belongs.
@@ -12,9 +12,83 @@ setting belongs.
 |------------|---------|-------|
 | `nixos` | Desktop workstation | NVIDIA, Hyprland |
 | `laptop` | MacBook with T2 chip | NixOS, T2 fixes |
+| `generic` | Any new x86_64 PC | Desktop's apps, no GPU/hardware specifics |
 | `nixos-minimal` | TTY fallback | No GUI |
 | `computer-3` | Personal Apple Silicon Mac | nix-darwin |
 | `work` | Card store Mac | nix-darwin |
+
+## Installing on a new NixOS machine
+
+`generic` is the desktop config with the hardware stripped out: same Hyprland /
+COSMIC session, services, users, and apps, but no NVIDIA module, no swap file,
+and no disk layout. The only machine-specific file is the
+`hardware-configuration.nix` you generate during the install. The machine needs
+to boot in UEFI mode (the config uses systemd-boot).
+
+### 1. Boot the installer
+
+Boot the [NixOS ISO](https://nixos.org/download/) (the minimal one is enough)
+and get online. Ethernet works on its own; for WiFi, run `nmtui`.
+
+### 2. Partition and mount
+
+Here's an example for a blank disk at `/dev/nvme0n1` (check with `lsblk`, and
+change the device name if yours is different). **It erases the disk.**
+
+```bash
+sudo -i
+parted /dev/nvme0n1 -- mklabel gpt
+parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 1GiB
+parted /dev/nvme0n1 -- set 1 esp on
+parted /dev/nvme0n1 -- mkpart root ext4 1GiB 100%
+mkfs.fat -F 32 -n boot /dev/nvme0n1p1
+mkfs.ext4 -L nixos /dev/nvme0n1p2
+mount /dev/disk/by-label/nixos /mnt
+mount --mkdir -o umask=077 /dev/disk/by-label/boot /mnt/boot
+```
+
+### 3. Generate the hardware config and clone this repo
+
+```bash
+nixos-generate-config --root /mnt
+mv /mnt/etc/nixos /mnt/etc/nixos.generated
+nix-shell -p git --run 'git clone https://github.com/Spheroman/dotfiles /mnt/etc/nixos'
+cd /mnt/etc/nixos && git checkout darwin
+cp /mnt/etc/nixos.generated/hardware-configuration.nix hosts/generic/
+git add hosts/generic/hardware-configuration.nix
+```
+
+The `git add` is required. Nix only sees files tracked by git, so leaving it
+out fails with an error about `fileSystems."/"` not being set. The repo has to
+live at `/etc/nixos`, because the `rebuild` aliases point there.
+
+Optional: to give the machine its own name, rename the `generic` attr in
+`flake.nix` and set `networking.hostName` to the same value in
+`hosts/generic/default.nix`. `rebuild` (nh) picks the config whose name matches
+the hostname, so the two have to agree. You can also copy `hosts/generic` to a
+new `hosts/<name>` directory and add a matching `nixosConfigurations` entry.
+
+### 4. Install
+
+```bash
+nixos-install --flake /mnt/etc/nixos#generic
+```
+
+At the end it asks for a root password. Then `reboot`.
+
+### 5. Post-install
+
+- Log in as `jackw` (the initial password is `jackw`) and run `passwd` right
+  away. Do the same for `wenyu`.
+- Take ownership of the repo so you can commit to it without sudo:
+  `sudo chown -R jackw /etc/nixos`.
+- Git rewrites `https://github.com/` to SSH, so set up an SSH key (or run
+  `gh auth login`) before you `git pull` or push.
+- Commit `hosts/generic/hardware-configuration.nix` (or your renamed host).
+  After that, `rebuild` handles every later change.
+- If the machine has an NVIDIA GPU, add `../../modules/hardware/nvidia.nix` to
+  the host's imports. OBS picks up CUDA support automatically when the
+  NVIDIA driver is enabled.
 
 ## Installing on a new Mac
 

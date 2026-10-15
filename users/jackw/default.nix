@@ -1,5 +1,5 @@
 # home/default.nix
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, lib, inputs, osConfig, ... }:
 
 {
   imports = [
@@ -26,7 +26,10 @@
 
   programs.obs-studio = {
     enable = true;
-    package = pkgs.obs-studio.override {cudaSupport = true;};
+    # CUDA only where the host actually has the NVIDIA driver
+    package = pkgs.obs-studio.override {
+      cudaSupport = lib.elem "nvidia" osConfig.services.xserver.videoDrivers;
+    };
   };
 
   programs.home-manager.enable = true;

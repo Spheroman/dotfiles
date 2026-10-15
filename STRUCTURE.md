@@ -16,6 +16,9 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
 │   ├── laptop/            # MacBook with T2 chip (NixOS)
 │   │   ├── default.nix    # Laptop-specific settings, T2 fixes
 │   │   └── hardware-configuration.nix
+│   ├── generic/           # Hardware-agnostic desktop for new machines
+│   │   ├── default.nix    # Desktop's settings minus NVIDIA/swap file
+│   │   └── hardware-configuration.nix  # Generated at install time (not in repo)
 │   ├── mac/               # Apple Silicon Macs (nix-darwin, not NixOS)
 │   │   ├── common.nix     # Shared: homebrew base, overlays, user
 │   │   ├── personal.nix   # computer-3 — games, personal-license apps
@@ -62,9 +65,10 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
 
 ### Flake Structure
 
-The `flake.nix` defines 3 system configurations:
+The `flake.nix` defines 4 NixOS system configurations:
 - **nixos** → Desktop with NVIDIA GPU
 - **laptop** → MacBook with T2 chip
+- **generic** → Any new PC (no GPU or hardware specifics)
 - **nixos-minimal** → TTY fallback (no GUI)
 
 ### Module Hierarchy

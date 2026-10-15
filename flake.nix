@@ -120,6 +120,16 @@
           ];
         };
 
+        # Hardware-agnostic desktop for new machines: everything the desktop
+        # has, minus NVIDIA and that machine's hardware-configuration.nix
+        generic = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = commonModules ++ [
+            ./hosts/generic
+          ];
+        };
+
         # Minimal fallback configuration (TTY only)
         nixos-minimal = nixpkgs.lib.nixosSystem {
           inherit system;
