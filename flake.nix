@@ -26,11 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    solaar = {
-      url = "github:Svenum/Solaar-Flake/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     T2FanRD.url = "github:GnomedDev/T2FanRD";
 
     # Secrets management
@@ -69,9 +64,6 @@
             users.wenyu = import ./users/wenyu;
           };
         }
-
-        # Solaar for Logitech devices
-        inputs.solaar.nixosModules.default
       ];
 
       # One Mac. `extraModules` carries the per-host divergence (app list,

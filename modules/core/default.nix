@@ -83,7 +83,11 @@
   # Services
   services.printing.enable = true;
   services.openssh.enable = true;
-  services.solaar.enable = true;
+  # Logitech devices (nixpkgs module; replaces the old Solaar-Flake input)
+  programs.solaar = {
+    enable = true;
+    userService.enable = true;
+  };
 
   services.avahi = {
     enable = true;
