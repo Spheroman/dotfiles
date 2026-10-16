@@ -2,6 +2,13 @@
 { config, pkgs, inputs, ... }:
 
 {
+  imports = [ inputs.hayashi.nixosModules.hayashi-shell ];
+
+  # PAM services for the lock screens: the shell's own, and hyprlock, which
+  # stays as the fallback when the shell isn't running.
+  programs.hayashi-shell.enable = true;
+  security.pam.services.hyprlock = { };
+
   programs.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;

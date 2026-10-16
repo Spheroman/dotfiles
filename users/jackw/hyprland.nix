@@ -47,7 +47,7 @@ in
     -- Startup applications
     hl.on("hyprland.start", function()
       hl.exec_cmd("foot --server")  -- foot daemon for fast terminal spawning
-      hl.exec_cmd("qs")  -- Hayashi shell: frame, bar, wallpaper, panels, notifications (quickshell.nix)
+      hl.exec_cmd("hayashi-shell")  -- frame, bar, wallpaper, panels, notifications, lock (quickshell.nix)
       hl.exec_cmd("wl-paste --watch cliphist store")  -- clipboard history
     end)
 
@@ -92,6 +92,12 @@ in
       dwindle = {
         preserve_split = true,
       },
+
+      -- If the lock screen crashes, let a new one take over (restarting the
+      -- shell, or hyprlock) instead of leaving the session stuck locked.
+      misc = {
+        allow_session_lock_restore = true,
+      },
     })
 
     -- Animations
@@ -113,7 +119,7 @@ in
     -- Core bindings
     hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("footclient"))
     hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
-    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("qs ipc call panels toggle"))
+    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell ipc call panels toggle"))
     hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
     hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
     hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
@@ -300,7 +306,8 @@ in
     enable = true;
     settings = {
       general = {
-        lock_cmd = "pidof hyprlock || hyprlock";
+        # The shell's lock screen; hyprlock if the shell isn't running.
+        lock_cmd = "hayashi-shell ipc call lock lock || pidof hyprlock || hyprlock";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
