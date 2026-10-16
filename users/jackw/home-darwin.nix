@@ -70,22 +70,6 @@
     rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#${hostname}";
   };
 
-  # mise (nix-managed) handles
-  # language runtimes; uv handles Python.
-  programs.mise = {
-    enable = true;
-    enableZshIntegration = true;
-    globalConfig = {
-      tools = {
-        java = "lts";
-        node = "lts";
-        ruby = "3";
-        rust = "latest";
-      };
-      settings.idiomatic_version_file_enable_tools = [ "ruby" ];
-    };
-  };
-
   # Shared git/gh config is in ./git.nix; the keychain is the Mac-only part.
   programs.git.settings.credential.helper = "osxkeychain";
 

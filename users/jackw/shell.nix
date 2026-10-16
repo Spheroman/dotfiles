@@ -96,6 +96,27 @@
     defaultOptions = [ "--height 40%" "--layout=reverse" "--border" ];
   };
 
+  # mise (nix-managed) handles language runtimes; uv handles Python.
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
+    globalConfig = {
+      tools = {
+        java = "lts";
+        node = "lts";
+        ruby = "3";
+        rust = "latest";
+      };
+      settings = {
+        idiomatic_version_file_enable_tools = [ "ruby" ];
+        # Prebuilt runtimes. On NixOS mise otherwise compiles node etc. from
+        # source; the prebuilt ones run there via nix-ld (modules/core).
+        # Already the default on macOS.
+        all_compile = false;
+      };
+    };
+  };
+
   # Targets of the aliases above.
   home.packages = with pkgs; [
     eza

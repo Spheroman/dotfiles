@@ -8,8 +8,7 @@
     # (VS Code itself comes from programs.vscode in ../programs.)
     uv
 
-    # JavaScript/TypeScript
-    nodejs
+    # JavaScript/TypeScript (node comes from mise, in ../shell.nix)
     bun
 
     # Database
