@@ -1,12 +1,14 @@
 # users/jackw/home-darwin.nix
-# macOS home-manager config, shared by every Mac. Standalone for now; will be
-# merged with the NixOS jackw config via platform guards in a later refactor.
+# macOS home-manager config, shared by every Mac. Shell and git config shared
+# with NixOS come from ./shell.nix and ./git.nix; this file is what's Mac-only.
 #
 # `hostname`, `username`, and `gitEmail` come from mkDarwin in flake.nix.
-{ config, pkgs, lib, hostname, username, gitEmail, ... }:
+{ config, pkgs, hostname, username, ... }:
 
 {
   imports = [
+    ./shell.nix
+    ./git.nix
     ./neovim.nix
     ./secrets-darwin.nix
   ];
@@ -23,7 +25,6 @@
     HOMEBREW_PREFIX = "/opt/homebrew";
     HOMEBREW_CELLAR = "/opt/homebrew/Cellar";
     HOMEBREW_REPOSITORY = "/opt/homebrew";
-    BAT_PAGER = "less -R --mouse";
   };
   # These go into hm-session-vars (sourced before .zshrc), so `mise activate`
   # in .zshrc prepends its shims AFTER homebrew and wins (e.g. mise node over
@@ -61,94 +62,12 @@
     config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/dotfiles/users/jackw/programs/lazy-lock.json";
 
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-
-    history = {
-      size = 50000;
-      save = 50000;
-      ignoreDups = true;
-      ignoreAllDups = true;
-      ignoreSpace = true;
-      share = false; # the non-wonky behavior
-    };
-
-    # fzf-tab: fuzzy tab completion with previews.
-    plugins = [
-      {
-        name = "fzf-tab";
-        src = pkgs.zsh-fzf-tab;
-        file = "share/fzf-tab/fzf-tab.plugin.zsh";
-      }
-    ];
-
-    oh-my-zsh = {
-      enable = true;
-      plugins = [ "git" "gh" "fzf" "sudo" "colored-man-pages" ];
-    };
-
-    shellAliases = {
-      ll = "eza -la --icons --git";
-      la = "eza -a --icons";
-      lt = "eza --tree --icons -L 2";
-      cat = "bat";
-      cc = "claude --dangerously-skip-permissions";
-      # sudo is required: darwin-rebuild refuses to activate as non-root
-      # ("system activation must now be run as root") rather than escalating
-      # on its own. It re-drops to $SUDO_USER for the home-manager part.
-      rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#${hostname}";
-    };
-
-    # fzf-tab fixups (brew is now on PATH via sessionPath, above).
-    initContent = ''
-      zstyle ':completion:*' menu no
-      zstyle ':fzf-tab:*' use-fzf-default-opts yes
-      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 "$realpath"'
-
-      # fzf's zsh integration rebinds Tab to its own completion; re-enable
-      # fzf-tab afterwards so it owns Tab.
-      enable-fzf-tab
-    '';
-  };
-
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      add_newline = false;
-      command_timeout = 1000;
-      character = {
-        success_symbol = "[➜](bold green)";
-        error_symbol = "[✗](bold red)";
-      };
-      directory = {
-        truncation_length = 3;
-        truncate_to_repo = true;
-      };
-      git_branch.symbol = " ";
-      aws.disabled = true;
-      gcloud.disabled = true;
-    };
-  };
-
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    defaultOptions = [ "--height 40%" "--layout=reverse" "--border" ];
+  # Shared zsh/prompt/fzf config is in ./shell.nix; these add to it.
+  programs.zsh.shellAliases = {
+    # sudo is required: darwin-rebuild refuses to activate as non-root
+    # ("system activation must now be run as root") rather than escalating
+    # on its own. It re-drops to $SUDO_USER for the home-manager part.
+    rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#${hostname}";
   };
 
   # mise (nix-managed) handles
@@ -167,47 +86,11 @@
     };
   };
 
-  # No git@github insteadOf on macOS: there's no SSH key here, so push/fetch
-  # over HTTPS via the gh/osxkeychain credential helper instead.
-  #
-  # Each host supplies its own identity via mkDarwin's `gitEmail`, so work
-  # commits are attributed to the work address rather than the personal one.
-  # Passing `gitEmail = null` instead leaves user.email unset, which makes git
-  # refuse to commit until it's set per-repo — useful for a machine where no
-  # single default identity is right.
-  # gh as a git credential helper, wired up by home-manager rather than by
-  # `gh auth setup-git`. The imperative command writes a hardcoded store path
-  # into ~/.gitconfig, which breaks once that gh build is garbage-collected;
-  # this way the path is refreshed on every rebuild and stays a GC root.
-  programs.gh = {
-    enable = true;
-    gitCredentialHelper = {
-      enable = true;
-      hosts = [ "https://github.com" "https://gist.github.com" ];
-    };
-  };
-
-  programs.git = {
-    enable = true;
-
-    ignores = [ "**/.claude/settings.local.json" ];
-
-    settings.credential.helper = "osxkeychain";
-    settings.core.autocrlf = "input";
-
-    settings.user = {
-      # Merge at the `user` level: `//` is shallow, so merging whole `settings`
-      # attrsets here would drop `name` on any host that supplies an email.
-      name = "Jack Wen";
-    } // lib.optionalAttrs (gitEmail != null) {
-      email = gitEmail;
-    };
-  };
+  # Shared git/gh config is in ./git.nix; the keychain is the Mac-only part.
+  programs.git.settings.credential.helper = "osxkeychain";
 
   home.packages = with pkgs; [
-    # core CLI
-    eza
-    bat
+    # core CLI  (eza/bat come from ./shell.nix)
     ripgrep
     fd
     jq

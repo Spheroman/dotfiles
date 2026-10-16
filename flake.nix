@@ -59,7 +59,8 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
+            # gitEmail: jackw's identity, read by users/jackw/git.nix
+            extraSpecialArgs = { inherit inputs; gitEmail = "jackwen04@gmail.com"; };
             users.jackw = import ./users/jackw;
             users.wenyu = import ./users/wenyu;
           };

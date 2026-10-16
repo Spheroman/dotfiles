@@ -10,45 +10,8 @@
   # Zen Browser
   programs.zen-browser.enable = true;
 
-  # Git
-  programs.git = {
-    enable = true;
-    settings = {
-      user.name = "Jack Wen";
-      user.email = "jackwen04@gmail.com";
-      url."git@github.com:".insteadOf = "https://github.com/";
-    };
-  };
-
-  # Starship prompt
-  programs.starship = {
-    enable = true;
-    settings = {
-      add_newline = false;
-      aws.disabled = true;
-      gcloud.disabled = true;
-      line_break.disabled = true;
-    };
-  };
-
-  # Direnv for per-project environments
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    enableZshIntegration = true;
-  };
-
-  # Fzf for fuzzy finding
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    defaultOptions = [
-      "--height 40%"
-      "--layout=reverse"
-      "--border"
-    ];
-  };
-
+  # Git, starship, direnv and fzf are shared with the Macs: ../git.nix and
+  # ../shell.nix.
 
   # Alacritty terminal
   programs.alacritty = {

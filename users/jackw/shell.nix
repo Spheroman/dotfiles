@@ -1,82 +1,70 @@
-# home/shell.nix
-{ config, pkgs, ... }:
+# users/jackw/shell.nix
+# zsh + prompt + shell tooling, shared by NixOS and the Macs.
+#
+# Platform-specific bits (PATH entries, `rebuild`, mise on the Macs) live in
+# the entry files: users/jackw/default.nix and users/jackw/home-darwin.nix.
+# shellAliases and initContent merge across modules, so they just add to this.
+{ pkgs, ... }:
 
 {
+  home.sessionVariables.BAT_PAGER = "less -R --mouse";
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    historySubstringSearch.enable = true;
 
     history = {
-      size = 10000;
-      save = 10000;
+      size = 50000;
+      save = 50000;
       ignoreDups = true;
       ignoreAllDups = true;
       ignoreSpace = true;
-      share = true;
+      share = false; # the non-wonky behavior
     };
 
-    initExtra = ''
-      export ZSH_DISABLE_COMPFIX="true"
-      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
-      
-      # Only run fastfetch in interactive shells and if it exists
-      if [[ -o interactive ]] && command -v fastfetch >/dev/null; then
-        fastfetch
-      fi
+    # fzf-tab: fuzzy tab completion with previews.
+    plugins = [
+      {
+        name = "fzf-tab";
+        src = pkgs.zsh-fzf-tab;
+        file = "share/fzf-tab/fzf-tab.plugin.zsh";
+      }
+    ];
 
-      # Better history search with up/down arrows
-      bindkey '^[[A' history-substring-search-up
-      bindkey '^[[B' history-substring-search-down
-    '';
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" "gh" "fzf" "sudo" "colored-man-pages" ];
+    };
 
     shellAliases = {
-      k = "kubectl";
-      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
-
-      # Nix helpers using nh
-      rebuild = "nh os switch /etc/nixos";
-      rebuild-desktop = "nh os switch /etc/nixos -H nixos";
-      rebuild-laptop = "nh os switch /etc/nixos -H laptop";
-      rebuild-test = "nh os test /etc/nixos";
-      update-flake = "nix flake update --flake /etc/nixos";
-
-      # Common aliases
       ll = "eza -la --icons --git";
       la = "eza -a --icons";
       lt = "eza --tree --icons -L 2";
       cat = "bat";
+      cc = "claude --dangerously-skip-permissions";
+      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
+      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
     };
 
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "git"
-        "kubectl"
-        "fzf"
-        "sudo"
-        "history"
-        "colored-man-pages"
-      ];
-    };
+    initContent = ''
+      zstyle ':completion:*' menu no
+      zstyle ':fzf-tab:*' use-fzf-default-opts yes
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 "$realpath"'
+
+      # fzf's zsh integration rebinds Tab to its own completion; re-enable
+      # fzf-tab afterwards so it owns Tab.
+      enable-fzf-tab
+    '';
   };
 
-  # Zoxide - smarter cd command
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  # Starship - customizable prompt
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
     settings = {
       add_newline = false;
-      format = "$username$hostname$directory$git_branch$git_status$nix_shell$cmd_duration$line_break$character";
+      command_timeout = 1000;
       character = {
         success_symbol = "[➜](bold green)";
         error_symbol = "[✗](bold red)";
@@ -86,23 +74,31 @@
         truncate_to_repo = true;
       };
       git_branch.symbol = " ";
-      nix_shell = {
-        symbol = " ";
-        format = "via [$symbol$state]($style) ";
-      };
+      aws.disabled = true;
+      gcloud.disabled = true;
     };
   };
 
-  # Direnv - per-project environment management
-  programs.direnv = {
+  programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
-    nix-direnv.enable = true;  # Use nix-direnv for faster nix integration
   };
 
-  # Install bat for better cat alias
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    defaultOptions = [ "--height 40%" "--layout=reverse" "--border" ];
+  };
+
+  # Targets of the aliases above.
   home.packages = with pkgs; [
+    eza
     bat
   ];
 }
-

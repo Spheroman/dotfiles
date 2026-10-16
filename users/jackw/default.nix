@@ -6,6 +6,7 @@
     inputs.zen-browser.homeModules.beta
     ./programs
     ./shell.nix
+    ./git.nix
     ./hyprland.nix
     ./neovim.nix
     ./waybar.nix
@@ -22,7 +23,22 @@
     stateVersion = "25.11";
   };
 
+  # Shared zsh/prompt/fzf config is in ./shell.nix; these add to it.
+  programs.zsh = {
+    shellAliases = {
+      rebuild = "nh os switch /etc/nixos";
+      rebuild-desktop = "nh os switch /etc/nixos -H nixos";
+      rebuild-laptop = "nh os switch /etc/nixos -H laptop";
+      rebuild-test = "nh os test /etc/nixos";
+      update-flake = "nix flake update --flake /etc/nixos";
+    };
 
+    # Appended, so nix-provided binaries win over anything dropped in here.
+    initContent = ''
+      export ZSH_DISABLE_COMPFIX="true"
+      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
+    '';
+  };
 
   programs.obs-studio = {
     enable = true;

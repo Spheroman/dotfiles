@@ -14,9 +14,7 @@
     ripgrep
     jq
     yq-go
-    eza
-    fzf
-    gh
+    # eza, fzf, gh come from ../shell.nix and ../git.nix
 
     # Networking tools
     mtr
