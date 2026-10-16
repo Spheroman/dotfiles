@@ -47,9 +47,8 @@ in
     -- Startup applications
     hl.on("hyprland.start", function()
       hl.exec_cmd("foot --server")  -- foot daemon for fast terminal spawning
-      hl.exec_cmd("waybar")
+      hl.exec_cmd("qs")  -- Card and Base shell: frame, bar, wallpaper, panels (quickshell.nix)
       hl.exec_cmd("mako")
-      hl.exec_cmd("hyprpaper")
       hl.exec_cmd("wl-paste --watch cliphist store")  -- clipboard history
     end)
 
@@ -63,18 +62,21 @@ in
       },
 
       general = {
-        gaps_in = 5,
-        gaps_out = 10,
+        -- Card and Base tokens: 12px gaps everywhere (gaps_in applies per
+        -- window, so 6 + 6 between two windows). Border colors are the
+        -- shell's primary and outline-variant for seed hue 160.
+        gaps_in = 6,
+        gaps_out = 12,
         border_size = 2,
         col = {
-          active_border = "rgba(e0e0e0ff)",
-          inactive_border = "rgba(e0e0e0aa)",
+          active_border = "rgba(88d8aeff)",
+          inactive_border = "rgba(344039ff)",
         },
         layout = "dwindle",
       },
 
       decoration = {
-        rounding = 10,
+        rounding = 24,  -- window radius: card radius 36 - gaps 12, concentric
         blur = {
           enabled = true,
           size = 8,
@@ -112,6 +114,7 @@ in
     -- Core bindings
     hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("footclient"))
     hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
+    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("qs ipc call panels toggle"))
     hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
     hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
     hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
@@ -226,9 +229,9 @@ in
     '';
   };
 
-  # Hyprpaper wallpaper daemon
+  # Hyprpaper wallpaper daemon. Off: the Quickshell shell draws the wallpaper.
   services.hyprpaper = {
-    enable = true;
+    enable = false;
     settings = {
       splash = false;
       wallpaper = [

@@ -10,7 +10,7 @@
     settings = {
       main = {
         term = "xterm-256color";
-        font = "JetBrainsMono Nerd Font:size=10";
+        font = "SpaceMono Nerd Font:size=10";
         dpi-aware = "no";  # size follows monitor scale, not physical DPI (yes made it too big)
         pad = "8x8";
       };

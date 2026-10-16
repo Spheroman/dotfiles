@@ -8,6 +8,7 @@
     ./shell.nix
     ./git.nix
     ./hyprland.nix
+    ./quickshell.nix
     ./neovim.nix
     ./waybar.nix
     ./secrets.nix
