@@ -47,8 +47,7 @@ in
     -- Startup applications
     hl.on("hyprland.start", function()
       hl.exec_cmd("foot --server")  -- foot daemon for fast terminal spawning
-      hl.exec_cmd("qs")  -- Card and Base shell: frame, bar, wallpaper, panels (quickshell.nix)
-      hl.exec_cmd("mako")
+      hl.exec_cmd("qs")  -- Hayashi shell: frame, bar, wallpaper, panels, notifications (quickshell.nix)
       hl.exec_cmd("wl-paste --watch cliphist store")  -- clipboard history
     end)
 
@@ -206,28 +205,6 @@ in
     };
   };
 
-  # Mako notification daemon
-  services.mako = {
-    enable = true;
-    settings = {
-      background-color = "#1a1b26";
-      border-color = "#33ccff";
-      border-radius = 10;
-      border-size = 2;
-      text-color = "#ffffff";
-      width = 400;
-      height = 150;
-      margin = "20";
-      padding = "15";
-      default-timeout = 5000;
-      font = "JetBrainsMono Nerd Font 11";
-    };
-    extraConfig = ''
-      [urgency=high]
-      border-color=#f7768e
-      default-timeout=0
-    '';
-  };
 
   # Hyprpaper wallpaper daemon. Off: the Quickshell shell draws the wallpaper.
   services.hyprpaper = {
