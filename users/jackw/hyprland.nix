@@ -2,188 +2,187 @@
 { config, pkgs, lib, ... }:
 
 let
-  # Generate workspace bindings for letters a-z and numbers 0-9
-  letters = lib.strings.stringToCharacters "abcdefghijklmnopqrstuvwxyz";
-  numbers = lib.strings.stringToCharacters "0123456789";
-  
+  # Workspace keys: letters a-z and numbers 0-9
+  keys = lib.strings.stringToCharacters "abcdefghijklmnopqrstuvwxyz0123456789";
+
   # Switch to workspace bindings
-  workspaceBinds = 
-    (map (ws: "$mod, ${lib.strings.toUpper ws}, workspace, name:${ws}") letters) ++
-    (map (n: "$mod, ${n}, workspace, name:${n}") numbers);
-  
-  # Generate movetoworkspace submodes content
-  moveToSingleBinds = lib.concatStringsSep "\n" (
-    (map (ws: "bind = , ${ws}, movetoworkspace, name:${ws}\nbind = , ${ws}, submap, reset") letters) ++
-    (map (n: "bind = , ${n}, movetoworkspace, name:${n}\nbind = , ${n}, submap, reset") numbers)
-  );
-  
-  moveToManyBinds = lib.concatStringsSep "\n" (
-    (map (ws: "bind = , ${ws}, movetoworkspacesilent, name:${ws}") letters) ++
-    (map (n: "bind = , ${n}, movetoworkspacesilent, name:${n}") numbers)
-  );
+  workspaceBinds = lib.concatMapStrings (k: ''
+    hl.bind(mod .. " + ${k}", hl.dsp.focus({ workspace = "name:${k}" }))
+  '') keys;
+
+  # Move window to workspace, then leave the submap
+  moveToSingleBinds = lib.concatMapStrings (k: ''
+      hl.bind("${k}", function()
+        hl.dispatch(hl.dsp.window.move({ workspace = "name:${k}" }))
+        hl.dispatch(hl.dsp.submap("reset"))
+      end)
+  '') keys;
+
+  # Move window to workspace silently, staying in the submap
+  moveToManyBinds = lib.concatMapStrings (k: ''
+      hl.bind("${k}", hl.dsp.window.move({ workspace = "name:${k}", follow = false }))
+  '') keys;
 in
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    settings = {
-      # Monitor configuration
-      monitor = [ 
-        ",preferred,auto,1"
-        "DP-3, 2560x1440@170, 0x0, 1"
-        "HDMI-A-1, 1920x1080@99.61, auto-center-left, 1, transform, 1"
-      ];
+    configType = "lua";
+    settings = { };
+  };
 
-      # Startup applications
-      exec-once = [
-        "foot --server &"  # Start foot daemon for fast terminal spawning
-        "waybar &"
-        "mako"
-        "hyprpaper"
-        "wl-paste --watch cliphist store"  # Clipboard history
-      ];
+  xdg.configFile."hypr/hyprland.lua".text = ''
+    local mod = "SUPER"
 
-      # Input configuration
+    -- Monitors
+    hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
+    hl.monitor({ output = "DP-3", mode = "2560x1440@170", position = "0x0", scale = 1 })
+    hl.monitor({ output = "HDMI-A-1", mode = "1920x1080@99.61", position = "auto-center-left", scale = 1, transform = 1 })
+
+    -- Environment
+    hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
+    hl.env("HYPRCURSOR_SIZE", "24")
+    hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
+    hl.env("XCURSOR_SIZE", "24")
+
+    -- Startup applications
+    hl.on("hyprland.start", function()
+      hl.exec_cmd("foot --server")  -- foot daemon for fast terminal spawning
+      hl.exec_cmd("waybar")
+      hl.exec_cmd("mako")
+      hl.exec_cmd("hyprpaper")
+      hl.exec_cmd("wl-paste --watch cliphist store")  -- clipboard history
+    end)
+
+    hl.config({
       input = {
-        kb_layout = "us";
-        follow_mouse = 1;
-        touchpad = {
-          natural_scroll = true;  # macOS-style scrolling
-        };
-        sensitivity = 0;
-        accel_profile = "flat";
-      };
+        kb_layout = "us",
+        follow_mouse = 1,
+        touchpad = { natural_scroll = true },  -- macOS-style scrolling
+        sensitivity = 0,
+        accel_profile = "flat",
+      },
 
-      # General settings
       general = {
-        gaps_in = 5;
-        gaps_out = 10;
-        border_size = 2;
-        "col.active_border" = "rgba(e0e0e0ff)";
-        "col.inactive_border" = "rgba(e0e0e0aa)";
-        layout = "dwindle";
-      };
-
-      env = [
-        "HYPRCURSOR_THEME,Bibata-Modern-Classic"
-        "HYPRCURSOR_SIZE,24"
-        "XCURSOR_THEME,Bibata-Modern-Classic"
-        "XCURSOR_SIZE,24"
-      ];
+        gaps_in = 5,
+        gaps_out = 10,
+        border_size = 2,
+        col = {
+          active_border = "rgba(e0e0e0ff)",
+          inactive_border = "rgba(e0e0e0aa)",
+        },
+        layout = "dwindle",
+      },
 
       decoration = {
-        rounding = 10;
+        rounding = 10,
         blur = {
-          enabled = true;
-          size = 8;
-          passes = 2;
-          new_optimizations = true;
-          xray = true;
-          ignore_opacity = true;
-        };
-        dim_inactive = false;
-      };
+          enabled = true,
+          size = 8,
+          passes = 2,
+          new_optimizations = true,
+          xray = true,
+          ignore_opacity = true,
+        },
+        dim_inactive = false,
+      },
 
-      # Animations
-      animations = {
-        enabled = true;
-        bezier = [
-          "easeInOutQuint, 0.83, 0, 0.17, 1"
-          "wind, 0.05, 0.9, 0.1, 1.05"
-          "winIn, 0.1, 1.1, 0.1, 1.1"
-          "winOut, 0.3, -0.3, 0, 1"
-          "liner, 1, 1, 1, 1"
-        ];
-        animation = [
-          "windows, 1, 2, easeInOutQuint, slide"
-          "windowsIn, 1, 2, easeInOutQuint, slide"
-          "windowsOut, 1, 2, easeInOutQuint, slide"
-          "windowsMove, 1, 2, easeInOutQuint, slide"
-          "border, 1, 1, liner"
-          "borderangle, 1, 30, liner, loop"
-          "fade, 1, 10, default"
-          "workspaces, 1, 2, easeInOutQuint"
-        ];
-      };
+      animations = { enabled = true },
 
       dwindle = {
-        pseudotile = true;
-        preserve_split = true;
-      };
+        preserve_split = true,
+      },
+    })
 
-      # Main bindings
-      "$mod" = "SUPER";
-      
-      bind = [
-        # Core bindings
-        "$mod, RETURN, exec, footclient"
-        "$mod, SPACE, exec, rofi -show drun"
-        "$mod SHIFT, Q, killactive,"
-        "$mod SHIFT, E, exit,"
-        "$mod, TAB, workspace, previous"
-        "$mod SHIFT, TAB, movecurrentworkspacetomonitor, +1"
+    -- Animations
+    hl.curve("easeInOutQuint", { type = "bezier", points = { { 0.83, 0 }, { 0.17, 1 } } })
+    hl.curve("wind",           { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.05 } } })
+    hl.curve("winIn",          { type = "bezier", points = { { 0.1, 1.1 }, { 0.1, 1.1 } } })
+    hl.curve("winOut",         { type = "bezier", points = { { 0.3, -0.3 }, { 0, 1 } } })
+    hl.curve("liner",          { type = "bezier", points = { { 1, 1 }, { 1, 1 } } })
 
-        # Screenshot with grimblast
-        "$mod SHIFT, S, exec, grimblast copy area"
+    hl.animation({ leaf = "windows",     enabled = true, speed = 2,  bezier = "easeInOutQuint", style = "slide" })
+    hl.animation({ leaf = "windowsIn",   enabled = true, speed = 2,  bezier = "easeInOutQuint", style = "slide" })
+    hl.animation({ leaf = "windowsOut",  enabled = true, speed = 2,  bezier = "easeInOutQuint", style = "slide" })
+    hl.animation({ leaf = "windowsMove", enabled = true, speed = 2,  bezier = "easeInOutQuint", style = "slide" })
+    hl.animation({ leaf = "border",      enabled = true, speed = 1,  bezier = "liner" })
+    hl.animation({ leaf = "borderangle", enabled = true, speed = 30, bezier = "liner", style = "loop" })
+    hl.animation({ leaf = "fade",        enabled = true, speed = 10, bezier = "default" })
+    hl.animation({ leaf = "workspaces",  enabled = true, speed = 2,  bezier = "easeInOutQuint" })
 
-        "$mod SHIFT, H, movefocus, l"
-        "$mod SHIFT, J, movefocus, d"
-        "$mod SHIFT, K, movefocus, u"
-        "$mod SHIFT, L, movefocus, r"
+    -- Core bindings
+    hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("footclient"))
+    hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
+    hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
+    hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
+    hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
+    hl.bind(mod .. " + SHIFT + TAB", hl.dsp.workspace.move({ monitor = "+1" }))
 
-        # Enter movement submode
-        "$mod SHIFT, semicolon, submap, movement"
-        "$mod SHIFT, M, submap, movetosingle"
-      ] ++ workspaceBinds;
+    -- Screenshot with grimblast
+    hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("grimblast copy area"))
 
-      # Movement submode
-      submap = [
-        ''movement
-bind = ,h,movewindow,l
-bind = ,j,movewindow,d
-bind = ,k,movewindow,u
-bind = ,l,movewindow,r
-bind = SHIFT, h,resizeactive,-50 0
-bind = SHIFT, j,resizeactive,0 50
-bind = SHIFT, k,resizeactive,0 -50
-bind = SHIFT, l,resizeactive,50 0
-bind = ,f,togglefloating,
-bind = SHIFT, f,fullscreen,0
-bind = ,m,submap,movetomany
-bind = ,q,submap,reset
-bind = ,escape,submap,reset
-bind = ,SUPER,submap,reset
-bind = , catchall, submap, movement
-submap = reset
-''
-        ''movetosingle
-${moveToSingleBinds}
+    hl.bind(mod .. " + SHIFT + H", hl.dsp.focus({ direction = "left" }))
+    hl.bind(mod .. " + SHIFT + J", hl.dsp.focus({ direction = "down" }))
+    hl.bind(mod .. " + SHIFT + K", hl.dsp.focus({ direction = "up" }))
+    hl.bind(mod .. " + SHIFT + L", hl.dsp.focus({ direction = "right" }))
 
-# Exit movetoworkspace submode
-bind = , escape, submap, reset
-bind = SUPER, SUPER_L, submap, reset
+    -- Enter submaps
+    hl.bind(mod .. " + SHIFT + semicolon", hl.dsp.submap("movement"))
+    hl.bind(mod .. " + SHIFT + M", hl.dsp.submap("movetosingle"))
 
-bind = , catchall, submap, movetosingle
+    -- Switch to workspace
+    ${workspaceBinds}
+    -- Mouse bindings
+    hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
+    hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
-submap = reset
-''
-        ''movetomany
-${moveToManyBinds}
+    -- Media and brightness keys (from Hyprland's example config). `locked`
+    -- keeps them working on the lock screen; no-ops on keyboards without them.
+    hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
+    hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
+    hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true })
+    hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true })
+    hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"),                  { locked = true, repeating = true })
+    hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),                  { locked = true, repeating = true })
+    hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
+    hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+    hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+    hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
-bind = , escape, submap, reset
-bind = SUPER, SUPER_L, submap, reset
+    -- Movement submap
+    hl.define_submap("movement", function()
+      hl.bind("h", hl.dsp.window.move({ direction = "left" }))
+      hl.bind("j", hl.dsp.window.move({ direction = "down" }))
+      hl.bind("k", hl.dsp.window.move({ direction = "up" }))
+      hl.bind("l", hl.dsp.window.move({ direction = "right" }))
+      hl.bind("SHIFT + h", hl.dsp.window.resize({ x = -50, y = 0, relative = true }))
+      hl.bind("SHIFT + j", hl.dsp.window.resize({ x = 0, y = 50, relative = true }))
+      hl.bind("SHIFT + k", hl.dsp.window.resize({ x = 0, y = -50, relative = true }))
+      hl.bind("SHIFT + l", hl.dsp.window.resize({ x = 50, y = 0, relative = true }))
+      hl.bind("f", hl.dsp.window.float({ action = "toggle" }))
+      hl.bind("SHIFT + f", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
+      hl.bind("m", hl.dsp.submap("movetomany"))
+      hl.bind("q", hl.dsp.submap("reset"))
+      hl.bind("escape", hl.dsp.submap("reset"))
+      hl.bind("SUPER_L", hl.dsp.submap("reset"))
+      hl.bind("catchall", hl.dsp.submap("movement"))
+    end)
 
-bind = , catchall, submap, movetomany
+    -- Move to workspace, then exit
+    hl.define_submap("movetosingle", function()
+    ${moveToSingleBinds}
+      hl.bind("escape", hl.dsp.submap("reset"))
+      hl.bind("SUPER + SUPER_L", hl.dsp.submap("reset"))
+      hl.bind("catchall", hl.dsp.submap("movetosingle"))
+    end)
 
-submap = reset
-''
-      ];
-      # Mouse bindings
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
-      ];
-    };
-  };
+    -- Move to workspace silently, staying in the submap
+    hl.define_submap("movetomany", function()
+    ${moveToManyBinds}
+      hl.bind("escape", hl.dsp.submap("reset"))
+      hl.bind("SUPER + SUPER_L", hl.dsp.submap("reset"))
+      hl.bind("catchall", hl.dsp.submap("movetomany"))
+    end)
+  '';
 
  
   # Rofi configuration
