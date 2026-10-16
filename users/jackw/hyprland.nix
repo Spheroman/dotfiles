@@ -118,7 +118,7 @@ in
 
     -- Core bindings
     hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("footclient"))
-    hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
+    hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("hayashi-shell ipc call launcher toggle"))
     hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell ipc call panels toggle"))
     hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
     hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
