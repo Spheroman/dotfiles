@@ -13,34 +13,11 @@
   # Git, starship, direnv and fzf are shared with the Macs: ../git.nix and
   # ../shell.nix.
 
-  # Alacritty terminal
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      env.TERM = "xterm-256color";
-      font = {
-        size = 12;
-        draw_bold_text_with_bright_colors = true;
-      };
-      scrolling.multiplier = 5;
-      selection.save_to_clipboard = true;
-    };
-  };
-
   # VSCode
   programs.vscode = {
     enable = true;
     profiles.default.extensions = with pkgs.vscode-extensions; [
       visualstudioexptteam.vscodeintellicode
-      njpwerner.autodocstring
-      ms-toolsai.jupyter
-      ms-python.python
-      wholroyd.jinja
-      batisteo.vscode-django
-      ms-python.pylint
-      ms-python.debugpy
-      ms-python.black-formatter
-      ms-python.vscode-pylance
       donjayamanne.githistory
       alefragnani.project-manager
       eamodio.gitlens

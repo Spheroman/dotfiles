@@ -4,17 +4,9 @@
 
 {
   home.packages = with pkgs; [
-    # Editors
-    vscode
-
-    # IDEs
-    jetbrains.pycharm
-
-    # Python
-    python313
-    python313Packages.importmagic
-    python313Packages.flake8
-    basedpyright
+    # Python — uv manages interpreters and tools, same as on the Macs.
+    # (VS Code itself comes from programs.vscode in ../programs.)
+    uv
 
     # JavaScript/TypeScript
     nodejs

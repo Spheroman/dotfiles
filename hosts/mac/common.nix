@@ -91,7 +91,6 @@
       "google-chrome"
       "zen"
       "helium-browser"
-      "browseros"
       # ai / tooling
       "claude-code@latest"
       "codex"

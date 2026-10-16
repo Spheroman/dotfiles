@@ -52,7 +52,6 @@
     
     # Development basics
     git
-    antigravity
     jetbrains.webstorm
     jetbrains.pycharm
     android-studio
