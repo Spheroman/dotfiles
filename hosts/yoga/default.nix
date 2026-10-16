@@ -26,10 +26,12 @@
   services.power-profiles-daemon.enable = true;
 
   # Battery charge limit: "Long_Life" is the kernel's name for Lenovo's
-  # conservation mode. Write "Standard" to the same file to charge to 100%
-  # until the next boot.
+  # conservation mode. It's on at boot, and the file is writable by the users
+  # group so the shell's Power card can switch it (to "Standard", charging
+  # to 100%) until the next boot.
   systemd.tmpfiles.rules = [
     "w /sys/class/power_supply/BAT0/charge_types - - - - Long_Life"
+    "z /sys/class/power_supply/BAT0/charge_types 0664 root users - -"
   ];
 
   environment.systemPackages = with pkgs; [

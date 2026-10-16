@@ -315,7 +315,9 @@ in
     };
   };
 
-  # Hypridle for idle management
+  # Hypridle: only the logind side now (lock before sleep, lock-session).
+  # The idle timers (dim, lock, screen off, sleep) moved into the shell,
+  # where they're set from the panel view's Power card.
   services.hypridle = {
     enable = true;
     settings = {
@@ -323,29 +325,10 @@ in
         # The shell's lock screen; hyprlock if the shell isn't running.
         lock_cmd = "hayashi-shell msg lock || pidof hyprlock || hyprlock";
         before_sleep_cmd = "loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
+        # Screens back on after sleep (the old `hyprctl dispatch dpms on`
+        # isn't valid with Hyprland's Lua dispatch).
+        after_sleep_cmd = "${pkgs.wlopm}/bin/wlopm --on '*'";
       };
-
-      listener = [
-        {
-          timeout = 300;  # 5 min
-          on-timeout = "brightnessctl -s set 10";
-          on-resume = "brightnessctl -r";
-        }
-        {
-          timeout = 600;  # 10 min
-          on-timeout = "loginctl lock-session";
-        }
-        {
-          timeout = 900;  # 15 min
-          on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on";
-        }
-        {
-          timeout = 1800;  # 30 min
-          on-timeout = "systemctl suspend";
-        }
-      ];
     };
   };
 }
