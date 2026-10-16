@@ -49,7 +49,7 @@ in
     -- would muddy the card arriving after login.
     hl.layer_rule({
       name = "hayashi-shell-no-anim",
-      match = { namespace = "^card-" },
+      match = { namespace = "card-.*" },  -- must match the whole namespace
       no_anim = true,
     })
 
@@ -106,6 +106,11 @@ in
       -- shell, or hyprlock) instead of leaving the session stuck locked.
       misc = {
         allow_session_lock_restore = true,
+        -- Before the shell maps, Hyprland shows its own background: make it
+        -- the shell's surface color so login is seamless (no logo or splash).
+        background_color = "rgb(0a100d)",
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
       },
     })
 
