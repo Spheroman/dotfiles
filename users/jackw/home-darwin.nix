@@ -10,7 +10,7 @@
     ./shell.nix
     ./git.nix
     ./neovim.nix
-    ./secrets-darwin.nix
+    ./secrets.nix
   ];
 
   home.username = username;
