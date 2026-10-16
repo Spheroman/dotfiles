@@ -118,8 +118,8 @@ in
 
     -- Core bindings
     hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("footclient"))
-    hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("hayashi-shell ipc call launcher toggle"))
-    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell ipc call panels toggle"))
+    hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("hayashi-shell msg launcher"))
+    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell msg panels"))
     hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
     hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
     hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
@@ -307,7 +307,7 @@ in
     settings = {
       general = {
         # The shell's lock screen; hyprlock if the shell isn't running.
-        lock_cmd = "hayashi-shell ipc call lock lock || pidof hyprlock || hyprlock";
+        lock_cmd = "hayashi-shell msg lock || pidof hyprlock || hyprlock";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
