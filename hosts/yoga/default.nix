@@ -19,6 +19,9 @@
 
   services.logind.settings.Login.HandlePowerKey = "suspend";
 
+  # The Hayashi shell's greeter instead of tuigreet (other hosts keep tuigreet).
+  programs.hayashi-shell.greeter.enable = true;
+
   # Power profiles (balanced / power-saver / performance) on top of amd-pstate.
   services.power-profiles-daemon.enable = true;
 

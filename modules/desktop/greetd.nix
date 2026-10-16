@@ -1,22 +1,24 @@
 # modules/desktop/greetd.nix
-{ config, pkgs, ... }:
+# greetd with tuigreet as the default login screen. Hosts that enable the
+# Hayashi shell's greeter (programs.hayashi-shell.greeter.enable) replace it.
+{ config, lib, pkgs, ... }:
 
+let
+  tuigreet = !config.programs.hayashi-shell.greeter.enable;
+in
 {
   services.greetd = {
     enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd start-hyprland";
-        user = "greeter";
-      };
+    settings.default_session = lib.mkIf tuigreet {
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd start-hyprland";
+      user = "greeter";
     };
   };
 
-  # Make sure Hyprland is available for greetd
-  environment.systemPackages = [ pkgs.tuigreet ];
+  environment.systemPackages = lib.mkIf tuigreet [ pkgs.tuigreet ];
 
-  # Ensure proper permissions for greetd
-  systemd.services.greetd.serviceConfig = {
+  # tuigreet draws on the TTY directly.
+  systemd.services.greetd.serviceConfig = lib.mkIf tuigreet {
     Type = "idle";
     StandardInput = "tty";
     StandardOutput = "tty";

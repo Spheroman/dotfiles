@@ -44,6 +44,15 @@ in
     hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
     hl.env("XCURSOR_SIZE", "24")
 
+    -- The shell animates its own surfaces (the card is the only thing that
+    -- moves); Hyprland's layer fade would show up as a double exposure, and
+    -- would muddy the card arriving after login.
+    hl.layer_rule({
+      name = "hayashi-shell-no-anim",
+      match = { namespace = "^card-" },
+      no_anim = true,
+    })
+
     -- Startup applications
     hl.on("hyprland.start", function()
       hl.exec_cmd("foot --server")  -- foot daemon for fast terminal spawning
