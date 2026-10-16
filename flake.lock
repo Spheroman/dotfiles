@@ -74,11 +74,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792184997,
-        "narHash": "sha256-LLkKPz+eDJhDsMEDnr3EZ3xp6LVw69coFZ3fW629W30=",
+        "lastModified": 1792185337,
+        "narHash": "sha256-O3Qy+O54ZxGXLnmhaXCGd7/mURx3JcbyUgMhclMj/zs=",
         "ref": "refs/heads/main",
-        "rev": "6ce7f116656bbfeedcfea9f4cc9bc665fe07541b",
-        "revCount": 22,
+        "rev": "8816f7415bc965d39422cfcebdc078306aff5177",
+        "revCount": 23,
         "type": "git",
         "url": "file:///home/jackw/Documents/hayashi"
       },
