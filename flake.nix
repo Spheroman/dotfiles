@@ -59,6 +59,7 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            backupFileExtension = "hm-backup";
             # gitEmail: jackw's identity, read by users/jackw/git.nix
             extraSpecialArgs = { inherit inputs; gitEmail = "jackwen04@gmail.com"; };
             users.jackw = import ./users/jackw;
