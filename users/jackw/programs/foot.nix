@@ -28,13 +28,17 @@
         blink = "yes";
       };
 
-      colors = {
-        alpha = "0.92";
-        background = "1a1a1a";
-        foreground = "e0e0e0";
+      # foot 1.28 renamed [colors] to [colors-dark] (and added [colors-light]).
+      # Opaque, with the shell's Material surfaces for seed hue 160: the
+      # background is surfaceContainerLow, like the shell's windows.
+      colors-dark = {
+        background = "0f1713";  # surfaceContainerLow
+        foreground = "dee7e2";  # fgSurface
+        selection-background = "005031";  # primaryContainer
+        selection-foreground = "dee7e2";
 
         # Normal colors
-        regular0 = "1a1a1a";  # black
+        regular0 = "242e28";  # black (surfaceContainerHighest)
         regular1 = "e06c75";  # red
         regular2 = "98c379";  # green
         regular3 = "e5c07b";  # yellow
@@ -44,7 +48,7 @@
         regular7 = "abb2bf";  # white
 
         # Bright colors
-        bright0 = "5c6370";   # bright black
+        bright0 = "76847c";   # bright black (outline)
         bright1 = "e06c75";   # bright red
         bright2 = "98c379";   # bright green
         bright3 = "e5c07b";   # bright yellow
