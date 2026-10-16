@@ -9,6 +9,13 @@
   programs.hayashi-shell.enable = true;
   security.pam.services.hyprlock = { };
 
+  # Desktop services the Hyprland session relies on. These used to arrive
+  # with the COSMIC module; hosts without it need them set here.
+  services.upower.enable = true;            # battery and power info for the shell
+  services.gnome.gnome-keyring.enable = true; # app secrets, e.g. gh's login
+  services.gvfs.enable = true;              # trash, mounts and network places in Nemo
+  services.udisks2.enable = true;           # removable drives
+
   programs.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -37,6 +44,7 @@
     slurp
     grimblast  # Screenshot utility
     brightnessctl  # brightness keys and hypridle dimming
+    playerctl  # media keys
     swaylock
     swayidle
   ];

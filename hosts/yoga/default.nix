@@ -8,7 +8,6 @@
     ./hardware-configuration.nix
     ../../modules/desktop/hyprland.nix
     ../../modules/desktop/greetd.nix
-    ../../modules/desktop/cosmic.nix
   ];
 
   # Must match the flake attr so `rebuild` (nh) picks this config.
