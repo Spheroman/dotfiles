@@ -67,6 +67,26 @@
         "type": "github"
       }
     },
+    "hayashi": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792142317,
+        "narHash": "sha256-ct/BRb0SW9757QSySxQ259UxerFnwxz+vpHELzo3HJ4=",
+        "ref": "refs/heads/main",
+        "rev": "4b618606ec0b10236dbcf0404a0d9799be990252",
+        "revCount": 10,
+        "type": "git",
+        "url": "file:///home/jackw/Documents/hayashi"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/jackw/Documents/hayashi"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -581,6 +601,7 @@
     "root": {
       "inputs": {
         "T2FanRD": "T2FanRD",
+        "hayashi": "hayashi",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "nix-darwin": "nix-darwin",

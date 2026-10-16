@@ -34,6 +34,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Hayashi's Quickshell shell (and later the compositor itself). Points at
+    # the local checkout until it's pushed; switch to
+    # "github:Spheroman/hayashi" then.
+    hayashi = {
+      url = "git+file:///home/jackw/Documents/hayashi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # macOS system management
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/master";

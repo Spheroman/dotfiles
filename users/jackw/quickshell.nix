@@ -1,19 +1,14 @@
 # users/jackw/quickshell.nix
-# Card and Base, the Quickshell shell in ./quickshell. Started from Hyprland
+# Hayashi's Quickshell shell, from the hayashi flake. Started from Hyprland
 # (see hyprland.nix); `qs ipc call panels toggle` is bound to Super+Esc.
-{ config, pkgs, ... }:
+{ inputs, ... }:
 
 {
-  home.packages = with pkgs; [
-    quickshell
-    material-symbols
-    nerd-fonts.space-mono
-    (google-fonts.override { fonts = [ "SpaceGrotesk" ]; })
-  ];
+  imports = [ inputs.hayashi.homeManagerModules.hayashi-shell ];
 
-  fonts.fontconfig.enable = true;
-
-  # Out of the store so Quickshell hot-reloads edits without a rebuild.
-  xdg.configFile."quickshell".source =
-    config.lib.file.mkOutOfStoreSymlink "/etc/nixos/users/jackw/quickshell";
+  programs.hayashi-shell = {
+    enable = true;
+    # Link the working copy so QML edits reload live without a rebuild.
+    devPath = "/home/jackw/Documents/hayashi/shell";
+  };
 }
