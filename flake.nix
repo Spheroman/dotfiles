@@ -132,6 +132,15 @@
           ];
         };
 
+        # Lenovo Yoga 7 2-in-1 (AMD)
+        yoga = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = commonModules ++ [
+            ./hosts/yoga
+          ];
+        };
+
         # Minimal fallback configuration (TTY only)
         nixos-minimal = nixpkgs.lib.nixosSystem {
           inherit system;

@@ -19,6 +19,9 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
 │   ├── generic/           # Hardware-agnostic desktop for new machines
 │   │   ├── default.nix    # Desktop's settings minus NVIDIA/swap file
 │   │   └── hardware-configuration.nix  # Generated at install time (not in repo)
+│   ├── yoga/              # Lenovo Yoga 7 2-in-1 (AMD), started from generic
+│   │   ├── default.nix    # Power profiles, battery charge limit
+│   │   └── hardware-configuration.nix
 │   ├── mac/               # Apple Silicon Macs (nix-darwin, not NixOS)
 │   │   ├── common.nix     # Shared: homebrew base, overlays, user
 │   │   ├── personal.nix   # computer-3 — games, personal-license apps
@@ -40,16 +43,17 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
 └── users/                 # Home Manager user configurations
     ├── jackw/
     │   ├── default.nix    # User entry point, imports all modules
-    │   ├── shell.nix      # Zsh, starship, zoxide, direnv
+    │   ├── shell.nix      # Zsh, starship, zoxide, direnv, fzf (shared with Macs)
+    │   ├── git.nix        # git + gh (shared with Macs)
     │   ├── hyprland.nix   # Hyprland keybinds, rofi, mako, hyprlock
     │   ├── waybar.nix     # Status bar configuration
     │   ├── secrets.nix    # sops-nix secrets management
     │   ├── programs/
     │   │   ├── foot.nix    # Terminal emulator
-    │   │   └── default.nix  # Git, Zen browser settings
+    │   │   └── default.nix  # Zen, VS Code, Solaar rules
     │   └── packages/
     │       ├── cli.nix         # CLI tools (ripgrep, fzf, eza, etc.)
-    │       ├── development.nix # Dev tools (neovim, PyCharm, Python)
+    │       ├── development.nix # Dev tools (uv, bun, LM Studio, AI CLIs)
     │       └── applications.nix # GUI apps (Discord, Obsidian, etc.)
     │
     └── wenyu/
@@ -65,10 +69,11 @@ This document explains the organization of the NixOS configuration in `/etc/nixo
 
 ### Flake Structure
 
-The `flake.nix` defines 4 NixOS system configurations:
+The `flake.nix` defines 5 NixOS system configurations:
 - **nixos** → Desktop with NVIDIA GPU
 - **laptop** → MacBook with T2 chip
 - **generic** → Any new PC (no GPU or hardware specifics)
+- **yoga** → Lenovo Yoga 7 2-in-1 (AMD)
 - **nixos-minimal** → TTY fallback (no GUI)
 
 ### Module Hierarchy

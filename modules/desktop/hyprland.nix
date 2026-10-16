@@ -29,6 +29,7 @@
     grim
     slurp
     grimblast  # Screenshot utility
+    brightnessctl  # brightness keys and hypridle dimming
     swaylock
     swayidle
   ];

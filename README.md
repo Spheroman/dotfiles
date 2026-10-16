@@ -13,6 +13,7 @@ setting belongs.
 | `nixos` | Desktop workstation | NVIDIA, Hyprland |
 | `laptop` | MacBook with T2 chip | NixOS, T2 fixes |
 | `generic` | Any new x86_64 PC | Desktop's apps, no GPU/hardware specifics |
+| `yoga` | Lenovo Yoga 7 2-in-1 (AMD) | `generic` + power profiles, battery charge limit |
 | `nixos-minimal` | TTY fallback | No GUI |
 | `computer-3` | Personal Apple Silicon Mac | nix-darwin |
 | `work` | Card store Mac | nix-darwin |
@@ -82,10 +83,17 @@ At the end it asks for a root password. Then `reboot`.
   away. Do the same for `wenyu`.
 - Take ownership of the repo so you can commit to it without sudo:
   `sudo chown -R jackw /etc/nixos`.
-- Git rewrites `https://github.com/` to SSH, so set up an SSH key (or run
-  `gh auth login`) before you `git pull` or push.
-- Commit `hosts/generic/hardware-configuration.nix` (or your renamed host).
-  After that, `rebuild` handles every later change.
+- Run `gh auth login`. Git reaches GitHub over HTTPS with gh as the
+  credential helper.
+- Copy the age key to `~/.config/sops/age/keys.txt` (mode 600) so sops-nix
+  can install the SSH keys and tokens; see `users/jackw/secrets.nix`.
+- Give the machine its own host rather than committing its hardware config
+  into `hosts/generic`, which has to stay a template: copy `hosts/generic` to
+  `hosts/<name>`, move `hardware-configuration.nix` there, set
+  `networking.hostName`, and add a matching `nixosConfigurations` entry
+  (`hosts/yoga` is an example). Switch once with
+  `nh os switch /etc/nixos -H <name>`; after that, `rebuild` handles every
+  later change.
 - If the machine has an NVIDIA GPU, add `../../modules/hardware/nvidia.nix` to
   the host's imports. OBS picks up CUDA support automatically when the
   NVIDIA driver is enabled.
