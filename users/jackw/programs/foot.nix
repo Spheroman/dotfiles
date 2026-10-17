@@ -29,7 +29,8 @@
       };
 
       # foot 1.28 renamed [colors] to [colors-dark] (and added [colors-light]).
-      # Opaque, with the shell's Material surfaces for seed hue 160: the
+      # Opaque, with the shell's Material surfaces for seed hue 160 (new windows
+      # from hayashi-footclient get the Theme card's seed instead): the
       # background is surfaceContainerLow, like the shell's windows.
       colors-dark = {
         background = "0f1713";  # surfaceContainerLow

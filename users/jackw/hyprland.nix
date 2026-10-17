@@ -72,7 +72,8 @@ in
       general = {
         -- Card and Base tokens: 12px gaps everywhere (gaps_in applies per
         -- window, so 6 + 6 between two windows). Border colors are the
-        -- shell's primary and outline-variant for seed hue 160.
+        -- shell's primary and outline-variant for seed hue 160; the shell sets
+        -- them live from its Theme card (and again after a config reload).
         gaps_in = 6,
         gaps_out = 12,
         border_size = 2,
@@ -137,7 +138,7 @@ in
     hl.animation({ leaf = "workspaces",  enabled = true, speed = 2,  bezier = "easeInOutQuint" })
 
     -- Core bindings
-    hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("footclient"))
+    hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("hayashi-footclient"))  -- footclient in the shell's theme colors
     hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("hayashi-shell msg launcher"))
     hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell msg panels"))
     hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
