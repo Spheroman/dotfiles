@@ -11,4 +11,9 @@
   imports = [ inputs.hayashi.homeManagerModules.hayashi-shell ];
 
   programs.hayashi-shell.enable = true;
+
+  # Apps learn light/dark from the desktop portal, which reads this
+  # (Firefox/Zen, GTK 4 and libadwaita apps; the compositor isn't involved).
+  # A leftover KDE/COSMIC value had it at prefer-light.
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 }
