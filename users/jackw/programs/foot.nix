@@ -63,7 +63,7 @@
       # (the dark theme's are One Dark). The shell's Dark theme tile switches
       # running terminals between the two (SIGUSR1/SIGUSR2 to foot).
       colors-light = {
-        background = "ebf2ee";  # surfaceContainerLow
+        background = "d9e2dd";  # surfaceContainerLow
         foreground = "151d18";  # fgSurface
         selection-background = "bcebd1";  # primaryContainer
         selection-foreground = "151d18";
@@ -76,7 +76,7 @@
         regular4 = "4078f2";  # blue
         regular5 = "a626a4";  # magenta
         regular6 = "0184bc";  # cyan
-        regular7 = "d4e0d9";  # white (surfaceContainerHighest)
+        regular7 = "eef6f1";  # white (surfaceContainerHighest)
 
         # Bright colors
         bright0 = "68756e";   # bright black (outline)
