@@ -34,11 +34,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Hayashi's Quickshell shell (and later the compositor itself). Points at
-    # the local checkout until it's pushed; switch to
-    # "github:Spheroman/hayashi" then.
+    # Hayashi's Quickshell shell (and later the compositor itself). To try
+    # local changes before pushing them: `hayashi-shell dev <checkout>/shell`,
+    # or `--override-input hayashi path:<checkout>` for a rebuild.
     hayashi = {
-      url = "git+file:///home/jackw/Documents/hayashi";
+      url = "github:Spheroman/hayashi";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

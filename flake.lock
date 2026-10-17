@@ -76,15 +76,15 @@
       "locked": {
         "lastModified": 1792259780,
         "narHash": "sha256-TqaTmxGRa4iVNiI4w6FeUpfiI/x5vvM8KepsCL1QUHE=",
-        "ref": "refs/heads/main",
+        "owner": "Spheroman",
+        "repo": "hayashi",
         "rev": "ee1016ac208994be4ad3c81e5f990021d8b034e1",
-        "revCount": 40,
-        "type": "git",
-        "url": "file:///home/jackw/Documents/hayashi"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/jackw/Documents/hayashi"
+        "owner": "Spheroman",
+        "repo": "hayashi",
+        "type": "github"
       }
     },
     "home-manager": {
