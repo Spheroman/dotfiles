@@ -102,6 +102,12 @@ in
         preserve_split = true,
       },
 
+      -- Timestamps in hyprland.log, so problems (e.g. after waking from
+      -- sleep) can be matched up with the system journal.
+      debug = {
+        disable_time = false,
+      },
+
       -- If the lock screen crashes, let a new one take over (restarting the
       -- shell, or hyprlock) instead of leaving the session stuck locked.
       misc = {
