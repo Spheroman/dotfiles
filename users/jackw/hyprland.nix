@@ -140,7 +140,7 @@ in
     -- Core bindings
     hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd("hayashi-footclient"))  -- footclient in the shell's theme colors
     hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("hayashi-shell msg launcher"))
-    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell msg panels"))
+    hl.bind(mod .. " + Escape", hl.dsp.exec_cmd("hayashi-shell msg panels"), { locked = true })  -- also on the lock screen (restricted panels)
     hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
     hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
     hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
