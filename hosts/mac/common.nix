@@ -29,6 +29,11 @@
   # formula, get overwritten on every rebuild.
   security.pam.services.sudo_local.touchIdAuth = true;
 
+  # AeroSpace parks windows from other workspaces in the screen's bottom-right
+  # corner, and Mission Control zooms out to fit them, so every window shows
+  # up tiny. Grouping windows by app is AeroSpace's documented workaround.
+  system.defaults.dock.expose-group-apps = true;
+
   # Homebrew — declaratively manage GUI casks (brew still does the install).
   homebrew = {
     enable = true;
@@ -82,7 +87,7 @@
     ];
     casks = [
       # terminal / editors / dev
-      "iterm2"
+      "kitty"
       "visual-studio-code"
       "postman"
       "docker-desktop"
@@ -91,8 +96,9 @@
       "google-chrome"
       "zen"
       "helium-browser"
-      # ai / tooling
-      "claude-code@latest"
+      # ai / tooling  (Claude Code uses its native installer in ~/.local/bin,
+      # not the claude-code cask: zapping that cask deletes ~/.claude.json and
+      # the native install along with it)
       "codex"
       "codex-app"
       "t3-code"

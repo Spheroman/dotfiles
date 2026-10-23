@@ -11,6 +11,7 @@
     ./git.nix
     ./neovim.nix
     ./secrets.nix
+    ./programs/kitty.nix
   ];
 
   home.username = username;
@@ -34,6 +35,7 @@
     "$HOME/Library/pnpm/bin" # pnpm binary lives here in this install layout
     "$HOME/.lmstudio/bin"
     "$HOME/.pub-cache/bin"
+    "$HOME/.local/bin" # Claude Code's native installer (self-updating)
     "/opt/homebrew/bin"
     "/opt/homebrew/sbin"
   ];
